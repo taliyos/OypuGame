@@ -6,6 +6,9 @@ Create an easily accessible multiplayer version of PuyoPuyo, resembling Tetris F
 ## Overview
 OypuGame is the game/user side of the Oypu online game. Oypu is a PuyoPuyo-like puzzle game played entirely in the web with online multiplayer functionality. Online functionality is aided by [OypuServer](https://www.github.com/taliyos/OypuServer).
 
+## Technologies
+OypuGame is created with Phaser and communication with OypuServer is made through Socket.io.
+
 ## Original Version
 A while back, I made a version of PuyoPuyo that you can still play. It's not perfect and forgoes a lot of the additional features. Try it out on [itch.io](https://taliyos.itch.io/puyojs) ([Source Code](https://www.github.com/taliyos/puyojs)).
 
