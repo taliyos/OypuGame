@@ -40,7 +40,7 @@ TBD
    - [ ] "Elo" or other system
 
 ## Current Maintainers
-- [Charles Reverand](https://www.github.com/taliyos)
+- [Charles R](https://www.github.com/taliyos)
 
 ## License
 OypuGame is licensed under the MIT License. See [LICENSE](LICENSE) for additional details.
