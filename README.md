@@ -16,28 +16,28 @@ A while back, I made a version of PuyoPuyo that you can still play. It's not per
 TBD
 
 ## Features
- - [] Offline Gameplay 
-   - [] Piece Rotation
-   - [] Piece Detection
-     - [] Chain Removal
-     - [] Sprite Swaps
-   - [] Piece Gravity
-   - [] Next Piece Preview
-   - [] Scoring
-     - [] Combo Detection
-     - [] Score Display
-     - [] Score Gained Display
- - [] Custom Piece Sprites
-   - [] Piece Sprite Animations
- - [] Board Sprite
- - [] Online "versus" Gameplay
-   - [] Server Multiplayer
-   - [] Multiple Displayed Boards
-   - [] Player Garbage Interactivity
-   - [] Account Login
- - [] Stats Menu
- - [] Rankings
-   - [] "Elo" or other system
+ - [ ] Offline Gameplay 
+   - [ ] Piece Rotation
+   - [ ] Piece Detection
+     - [ ] Chain Removal
+     - [ ] Sprite Swaps
+   - [ ] Piece Gravity
+   - [ ] Next Piece Preview
+   - [ ] Scoring
+     - [ ] Combo Detection
+     - [ ] Score Display
+     - [ ] Score Gained Display
+ - [ ] Custom Piece Sprites
+   - [ ] Piece Sprite Animations
+ - [ ] Board Sprite
+ - [ ] Online "versus" Gameplay
+   - [ ] Server Multiplayer
+   - [ ] Multiple Displayed Boards
+   - [ ] Player Garbage Interactivity
+   - [ ] Account Login
+ - [ ] Stats Menu
+ - [ ] Rankings
+   - [ ] "Elo" or other system
 
 ## Current Maintainers
 - [Charles Reverand](https://www.github.com/taliyos)
