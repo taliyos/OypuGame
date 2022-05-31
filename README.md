@@ -13,7 +13,7 @@ OypuGame is created with Phaser and communication with OypuServer is made throug
 A while back, I made a version of PuyoPuyo that you can still play. It's not perfect and forgoes a lot of the additional features. Try it out on [itch.io](https://taliyos.itch.io/puyojs) ([Source Code](https://www.github.com/taliyos/puyojs)).
 
 ## RCOS Proposal
-TBD
+[View on Google Docs](https://docs.google.com/document/d/1eXm5zfqGpvBiPyBLLVvg5sBEhloP5CbykJFItqMcX3c/edit?usp=sharing)
 
 ## Features
  - [ ] Offline Gameplay 
