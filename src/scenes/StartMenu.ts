@@ -1,5 +1,8 @@
 import Phaser from "phaser";
 
+import playButtonImage from "../static/menu/play.png";
+import pieceSpriteSheet from "../static/pieces/full-sheet.png";
+
 export default class StartMenu extends Phaser.Scene {
     constructor() {
         super("StartMenu");
@@ -8,21 +11,24 @@ export default class StartMenu extends Phaser.Scene {
     // Load in all necessary assets
     // (buttons, backgrounds, etc.)
     preload() {
-        const loader = this.load.image("play_btn", "./src/assets/menu/play.png");
+        this.load.image("play_btn", playButtonImage);
+
+        this.load.spritesheet("piece_sheet", pieceSpriteSheet, {
+            frameWidth: 256,
+            frameHeight: 256,
+            endFrame: 79
+        });
     }
 
     create() {
-        const particleManager: Phaser.GameObjects.Particles.ParticleEmitterManager = this.add.particles("play_btn");
+        // const playBtn: Phaser.GameObjects.Image = this.add.image(this.scale.width / 2, this.scale.height / 2, "play_btn");
+        // playBtn.setInteractive();
 
-        const emitter: Phaser.GameObjects.Particles.ParticleEmitter = particleManager.createEmitter({
-            speed: 100,
-            scale: { start: 1, end: 0},
-            blendMode: "ADD"
+        const titleText = this.add.text(this.scale.width / 2, this.scale.height / 2 - 200, "oypu!", {
+            fontFamily: "MavenPro-Bold",
+            fontSize: "32px"
         });
-        
-        const playBtn: Phaser.GameObjects.Image = this.add.image(this.scale.width / 2, this.scale.height / 2, "play_btn");
-        playBtn.setInteractive();
 
-        emitter.start();
+        const redPuyoNormal = this.add.image(this.scale.width / 2, this.scale.height / 2 - 0, "piece_sheet", 0);
     }
 }

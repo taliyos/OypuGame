@@ -9,7 +9,8 @@ const config: Phaser.Types.Core.GameConfig = {
     height: 720,
     physics: {
     },
-    scene: [StartMenu]
+    scene: [StartMenu],
+    parent: "game"
 }
 
 export default new Phaser.Game(config);
