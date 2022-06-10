@@ -27,11 +27,12 @@ export default class StartMenu extends Phaser.Scene {
         let b = new Button(this.scale.width / 2, 400, 
             new ButtonText({
                 text: "play",
-                offset: new Phaser.Math.Vector2(75, 0),
+                offset: new Phaser.Math.Vector2(50, 0),
                 normalStyle: {
                     fontFamily: "MavenPro",
                     fontSize: "64px",
-                    color: "#00ff00",
+                    fontStyle: "normal",
+                    color: "#ffffff",
                 },
                 hoverStyle: {
                     fontFamily: "MavenPro",
@@ -41,17 +42,80 @@ export default class StartMenu extends Phaser.Scene {
                 clickedStyle: {
                     fontFamily: "MavenPro",
                     fontSize: "64px",
-                    color: "#0000ff",
+                    color: "#778877",
                 },
+                origin: new Phaser.Math.Vector2(0, 0.5),
+            }), 
+            {
+                texture: "piece_sheet",
+                frame: 1,
+                offset: new Phaser.Math.Vector2(-50, 0),
+                scale: new Phaser.Math.Vector2(0.5, 0.5),
+            });
+
+            let b2 = new Button(this.scale.width / 2, 527, 
+            new ButtonText({
+                text: "stats",
+                offset: new Phaser.Math.Vector2(50, 0),
+                normalStyle: {
+                    fontFamily: "MavenPro",
+                    fontSize: "64px",
+                    fontStyle: "normal",
+                    color: "#ffffff",
+                },
+                hoverStyle: {
+                    fontFamily: "MavenPro",
+                    fontSize: "64px",
+                    color: "#ffff00"
+                },
+                clickedStyle: {
+                    fontFamily: "MavenPro",
+                    fontSize: "64px",
+                    color: "#778877",
+                },
+                origin: new Phaser.Math.Vector2(0, 0.5),
             }), 
             {
                 texture: "piece_sheet",
                 frame: 3,
-                offset: new Phaser.Math.Vector2(-75, 0),
+                offset: new Phaser.Math.Vector2(-50, 0),
                 scale: new Phaser.Math.Vector2(0.5, 0.5),
             });
 
-        b.add(this);
+            let b3 = new Button(this.scale.width / 2, 650, 
+            new ButtonText({
+                text: "settings",
+                offset: new Phaser.Math.Vector2(50, 0),
+                normalStyle: {
+                    fontFamily: "MavenPro",
+                    fontSize: "64px",
+                    fontStyle: "normal",
+                    color: "#ffffff",
+                },
+                hoverStyle: {
+                    fontFamily: "MavenPro",
+                    fontSize: "64px",
+                    color: "#ffff00"
+                },
+                clickedStyle: {
+                    fontFamily: "MavenPro",
+                    fontSize: "64px",
+                    color: "#778877",
+                },
+                origin: new Phaser.Math.Vector2(0, 0.5),
+            }), 
+            {
+                texture: "piece_sheet",
+                frame: 2,
+                offset: new Phaser.Math.Vector2(-50, 0),
+                scale: new Phaser.Math.Vector2(0.5, 0.5),
+            });
+
+        b.add(Phaser.Math.Vector2.ZERO, this);
+        b2.add(Phaser.Math.Vector2.ZERO, this);
+        b3.add(Phaser.Math.Vector2.ZERO, this);
+
+
 
         // Title Text
         /*const titleText = this.add.text(this.scale.width / 2, this.scale.height / 10, "oypu!", {

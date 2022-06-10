@@ -1,8 +1,9 @@
 import Phaser from "phaser";
 import ButtonText from "./ButtonText";
 import DefaultImage from "~/interfaces/UI/DefaultImage";
+import PhaserObject from "~/interfaces/PhaserObject";
 
-export default class Button {
+export default class Button implements PhaserObject {
     position: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0, 0);
     text:ButtonText;
     image:DefaultImage;
@@ -35,15 +36,15 @@ export default class Button {
 
         // Modify to include hitbox
         this.sceneText.setInteractive().on("pointerdown", () => {this.text.pointerDown(sceneText)}) // pointer click down
-                                       .on("pointerup", () => {this.text.pointerUp(sceneText)})     // pointer click release
-                                       .on("pointermove", () => {this.text.pointerMove(sceneText)}) // ...
+                                       .on("pointerup",   () => {this.text.pointerUp(sceneText)})   // pointer click release
+                                       .on("pointermove", () => {this.text.pointerMove(sceneText)}) // not used
                                        .on("pointerover", () => {this.text.pointerOver(sceneText)}) // hover in
-                                       .on("pointerout", () => {this.text.pointerOut(sceneText)});  // hover out
+                                       .on("pointerout",  () => {this.text.pointerOut(sceneText)}); // pointer no longer in text box
 
     }
 
     // Adds the button to the Phaser Game
-    add(scene: Phaser.Scene) {
+    add(position: Phaser.Math.Vector2, scene: Phaser.Scene) {
         // Add the text to the scene
         if (this.text != null) {
             this.sceneText = this.text.add(this.position, scene);
