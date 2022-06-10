@@ -1,3 +1,27 @@
+@mixin font($font-family, $font-file)
+    @font-face
+        font-family: $font-family
+        src: url($font-file+".ttf") format("truetype")
+
+@include font("MavenPro", "../../src/static/fonts/MavenPro-Regular")
+@include font("MavenPro-Bold", "../../src/static/fonts/MavenPro-Bold")
+
+@font-face
+    font-family: MavenPro
+    url: ("../../src/static/fonts/MavenPro-Bold.ttf")
+
 body
     margin: 0
     padding: 0
+    font-family: "MavenPro"
+
+header
+    display: flex
+    justify-content: center
+
+#game
+    display: flex
+    justify-content: center
+
+    width: 100%
+    height: 90vh !important

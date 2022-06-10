@@ -2,9 +2,29 @@
 <html>
     <head>
         <title>Oypu</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" type="text/css" href="../public/style/main.sass"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+        <link rel="preload" as="font" href="../src/static/fonts/MavenPro-Bold.ttf" type="font/ttf"/>
     </head>
     <body>
-        <script type="module" src="main.ts"></script>
+        <div style="font-family:'MavenPro'; position:absolute; left:-1000px; visibility:hidden;">.</div>
+        <div class="hero is-warning">
+            <div class = "hero-body">
+                <p class="title">Warning! Oypu! is in early development!</p>
+                <p class = "subtitle">
+                    Many features are not yet ready. Check out the <a href = "https://www.github.com/taliyos/OypuGame">GitHub</a> for more information on current development.
+                </p>
+            </div>
+        </div>
+        <div class = "container is-flex is-justify-content-center">
+            <h1 class = "title is-1">Oypu!</h1>
+        </div>
+        <div id="game">
+            <script type="module" src="main.ts"></script>
+        </div>
+        <footer>
+            Find out more on <a href = "https://www.github.com/taliyos/OypuGame">GitHub</a>!
+        </footer>
     </body> 
 </html>
