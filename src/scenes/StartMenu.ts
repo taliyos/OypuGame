@@ -3,8 +3,8 @@ import ButtonText from "../components/ButtonText";
 
 import Button from "../components/Button";
 
-import playButtonImage from "../static/menu/play.png";
 import pieceSpriteSheet from "../static/pieces/full-sheet.png";
+import { playButtonText, playButtonImage } from "../constants/StartMenuUI";
 
 export default class StartMenu extends Phaser.Scene {
     constructor() {
@@ -14,8 +14,6 @@ export default class StartMenu extends Phaser.Scene {
     // Load in all necessary assets
     // (buttons, backgrounds, etc.)
     preload() {
-        this.load.image("play_btn", playButtonImage);
-
         this.load.spritesheet("piece_sheet", pieceSpriteSheet, {
             frameWidth: 256,
             frameHeight: 256,
@@ -24,34 +22,7 @@ export default class StartMenu extends Phaser.Scene {
     }
 
     create() {
-        let b = new Button(this.scale.width / 2, 400, 
-            new ButtonText({
-                text: "play",
-                offset: new Phaser.Math.Vector2(50, 0),
-                normalStyle: {
-                    fontFamily: "MavenPro",
-                    fontSize: "64px",
-                    fontStyle: "normal",
-                    color: "#ffffff",
-                },
-                hoverStyle: {
-                    fontFamily: "MavenPro",
-                    fontSize: "64px",
-                    color: "#ffff00"
-                },
-                clickedStyle: {
-                    fontFamily: "MavenPro",
-                    fontSize: "64px",
-                    color: "#778877",
-                },
-                origin: new Phaser.Math.Vector2(0, 0.5),
-            }), 
-            {
-                texture: "piece_sheet",
-                frame: 1,
-                offset: new Phaser.Math.Vector2(-50, 0),
-                scale: new Phaser.Math.Vector2(0.5, 0.5),
-            });
+        let b = new Button(this.scale.width / 2, 400, new ButtonText(playButtonText), playButtonImage);
 
             let b2 = new Button(this.scale.width / 2, 527, 
             new ButtonText({

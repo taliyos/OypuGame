@@ -1,14 +1,15 @@
 import Phaser from "phaser";
 
-import Text from "~/interfaces/UI/InteractiveText";
+import Text from "~/interfaces/UI/Text";
 import InteractiveText from "~/interfaces/UI/InteractiveText";
 import PhaserObject from "~/interfaces/PhaserObject";
+import VectorPos from "~/interfaces/universal/VectorPos";
 
 // Contains interaction definitions for each mouse state
 export default class ButtonText implements Text, InteractiveText, PhaserObject {
     text: string;
-    offset: Phaser.Math.Vector2;
-    origin: Phaser.Math.Vector2;
+    offset: VectorPos;
+    origin: VectorPos;
     normalStyle: Phaser.Types.GameObjects.Text.TextStyle;
     hoverStyle: Phaser.Types.GameObjects.Text.TextStyle;
     clickedStyle: Phaser.Types.GameObjects.Text.TextStyle;
