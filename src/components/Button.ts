@@ -33,14 +33,7 @@ export default class Button implements PhaserObject {
         // Temporary return while testing text feedback
         if (this.sceneText == null) return;
         let sceneText : Phaser.GameObjects.Text = this.sceneText;
-
-        // Modify to include hitbox
-        this.sceneText.setInteractive().on("pointerdown", () => {this.text.pointerDown(sceneText)}) // pointer click down
-                                       .on("pointerup",   () => {this.text.pointerUp(sceneText)})   // pointer click release
-                                       .on("pointermove", () => {this.text.pointerMove(sceneText)}) // not used
-                                       .on("pointerover", () => {this.text.pointerOver(sceneText)}) // hover in
-                                       .on("pointerout",  () => {this.text.pointerOut(sceneText)}); // pointer no longer in text box
-
+        this.text.linkInteractivity(sceneText);
     }
 
     // Adds the button to the Phaser Game

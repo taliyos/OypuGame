@@ -8,16 +8,18 @@ import VectorPos from "~/interfaces/universal/VectorPos";
 // Contains interaction definitions for each mouse state
 export default class ButtonText implements Text, InteractiveText, PhaserObject {
     text: string;
-    offset: VectorPos;
-    origin: VectorPos;
+    offset: VectorPos = { x: 0, y: 0 };
+    origin: VectorPos = { x: 0, y: 0 };
     normalStyle: Phaser.Types.GameObjects.Text.TextStyle;
     hoverStyle: Phaser.Types.GameObjects.Text.TextStyle;
     clickedStyle: Phaser.Types.GameObjects.Text.TextStyle;
 
     constructor(properties: Text) {
         this.text = properties.text;
-        this.offset = properties.offset;
-        this.origin = properties.origin;
+        if (properties.offset != null)
+            this.offset = properties.offset;
+        if (properties.origin != null)
+            this.origin = properties.origin;
         this.normalStyle = properties.normalStyle;
         this.hoverStyle = properties.hoverStyle;
         this.clickedStyle = properties.clickedStyle;
@@ -26,6 +28,15 @@ export default class ButtonText implements Text, InteractiveText, PhaserObject {
     // Add the text to the screen
     add(position: Phaser.Math.Vector2, scene: Phaser.Scene) {
         return (scene.add.text(position.x + this.offset.x, position.y + this.offset.y, this.text, this.normalStyle)).setOrigin(this.origin.x, this.origin.y);
+    }
+
+    linkInteractivity(text: Phaser.GameObjects.Text) {
+        // Modify to include hitbox
+        text.setInteractive().on("pointerdown", () => {this.pointerDown(text)})            // pointer click down
+                                       .on("pointerup",   () => {this.pointerUp(text)})   // pointer click release
+                                       .on("pointermove", () => {this.pointerMove(text)}) // not used
+                                       .on("pointerover", () => {this.pointerOver(text)}) // hover in
+                                       .on("pointerout",  () => {this.pointerOut(text)}); // pointer no longer in text box
     }
 
     // Event for when the pointer is held down
