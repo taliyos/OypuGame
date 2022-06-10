@@ -29,9 +29,9 @@ export default class StartMenu extends Phaser.Scene {
         
 
         // Menu Buttons
-        let playButton = new Button(this.scale.width / 2 - 64, 400, new ButtonText(playButtonText), playButtonImage);
-        let statsButton = new Button(this.scale.width / 2 - 62, 525, new ButtonText(statsButtonText), statsButtonImage);
-        let settingsButton = new Button(this.scale.width / 2 - 64, 650, new ButtonText(settingsButtonText), settingsButtonImage);
+        let playButton = new Button({ x: this.scale.width / 2 - 64, y: 400 }, new ButtonText(playButtonText), playButtonImage);
+        let statsButton = new Button({ x: this.scale.width / 2 - 62, y: 525 }, new ButtonText(statsButtonText), statsButtonImage);
+        let settingsButton = new Button({ x: this.scale.width / 2 - 64, y: 650 }, new ButtonText(settingsButtonText), settingsButtonImage);
 
         playButton.add(Phaser.Math.Vector2.ZERO, this);
         statsButton.add(Phaser.Math.Vector2.ZERO, this);
@@ -40,16 +40,15 @@ export default class StartMenu extends Phaser.Scene {
 
 
         // Title Text
-        const titleText = new ButtonText({
+        const titleText = new Button({ x: this.scale.width/2, y: 150 }, new ButtonText({
             text: "oypu!",
             normalStyle: titleTextStyleA,
             hoverStyle: titleTextStyleB,
             clickedStyle: titleTextStyleC,
-            offset: { x: this.scale.width/2, y: 150 },
             origin: { x: 0.5, y: 0.5 },
-        })
+            offset: undefined,
+        }));
 
-        const addedText = titleText.add(Phaser.Math.Vector2.ZERO, this);
-        titleText.linkInteractivity(addedText);
+        const sceneTitleText = titleText.add(Phaser.Math.Vector2.ZERO, this);
     }
 }

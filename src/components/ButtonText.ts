@@ -26,17 +26,8 @@ export default class ButtonText implements Text, InteractiveText, PhaserObject {
     }
     
     // Add the text to the screen
-    add(position: Phaser.Math.Vector2, scene: Phaser.Scene) {
+    add(position: VectorPos, scene: Phaser.Scene) {
         return (scene.add.text(position.x + this.offset.x, position.y + this.offset.y, this.text, this.normalStyle)).setOrigin(this.origin.x, this.origin.y);
-    }
-
-    linkInteractivity(text: Phaser.GameObjects.Text) {
-        // Modify to include hitbox
-        text.setInteractive().on("pointerdown", () => {this.pointerDown(text)})            // pointer click down
-                                       .on("pointerup",   () => {this.pointerUp(text)})   // pointer click release
-                                       .on("pointermove", () => {this.pointerMove(text)}) // not used
-                                       .on("pointerover", () => {this.pointerOver(text)}) // hover in
-                                       .on("pointerout",  () => {this.pointerOut(text)}); // pointer no longer in text box
     }
 
     // Event for when the pointer is held down
