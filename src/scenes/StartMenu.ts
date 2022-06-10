@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import ButtonText from "../components/ButtonText";
 
 import Button from "../components/Button";
 
@@ -23,22 +24,29 @@ export default class StartMenu extends Phaser.Scene {
     }
 
     create() {
-        // const playBtn: Phaser.GameObjects.Image = this.add.image(this.scale.width / 2, this.scale.height / 2, "play_btn");
-        // playBtn.setInteractive();
-
         let b = new Button(this.scale.width / 2, 400, 
-            {
-                text: "Play",
+            new ButtonText({
+                text: "play",
                 offset: new Phaser.Math.Vector2(75, 0),
-                textStyle: {
+                normalStyle: {
                     fontFamily: "MavenPro",
-                    fontSize: "64px"
+                    fontSize: "64px",
+                    color: "#00ff00",
                 },
-                normalColor: "#FF00FF",
-            }, 
+                hoverStyle: {
+                    fontFamily: "MavenPro",
+                    fontSize: "64px",
+                    color: "#ffff00"
+                },
+                clickedStyle: {
+                    fontFamily: "MavenPro",
+                    fontSize: "64px",
+                    color: "#0000ff",
+                },
+            }), 
             {
                 texture: "piece_sheet",
-                frame: 2,
+                frame: 3,
                 offset: new Phaser.Math.Vector2(-75, 0),
                 scale: new Phaser.Math.Vector2(0.5, 0.5),
             });
@@ -46,12 +54,12 @@ export default class StartMenu extends Phaser.Scene {
         b.add(this);
 
         // Title Text
-        const titleText = this.add.text(this.scale.width / 2, this.scale.height / 10, "oypu!", {
+        /*const titleText = this.add.text(this.scale.width / 2, this.scale.height / 10, "oypu!", {
             fontFamily: "MavenPro",
             fontSize: "132px"
         });
 
-        titleText.setOrigin(0.5);
+        titleText.setOrigin(0.5);*/
         /*
         // Red Puyo/Play Button
         const redPuyoNormal = this.add.image(this.scale.width / 3, 400, "piece_sheet", 0);

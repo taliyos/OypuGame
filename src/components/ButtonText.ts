@@ -1,49 +1,50 @@
 import Phaser from "phaser";
 
-import InteractiveText from "~/interfaces/InteractiveText";
+import InteractiveText from "~/interfaces/UI/InteractiveText";
+import InteractiveUI from "~/interfaces/UI/InteractiveUI";
+import PhaserObject from "~/interfaces/PhaserObject";
 
 // Contains interaction definitions for each mouse state
-export default class ButtonText implements InteractiveText {
+export default class ButtonText implements InteractiveText, InteractiveUI, PhaserObject {
     text: string;
     offset: Phaser.Math.Vector2;
-    textStyle: Phaser.Types.GameObjects.Text.TextStyle;
-    normalColor: string;
-    hoverColor: string;
-    clickedColor:string;
+    normalStyle: Phaser.Types.GameObjects.Text.TextStyle;
+    hoverStyle: Phaser.Types.GameObjects.Text.TextStyle;
+    clickedStyle: Phaser.Types.GameObjects.Text.TextStyle;
 
     constructor(properties: InteractiveText) {
         this.text = properties.text;
         this.offset = properties.offset;
-        this.textStyle = properties.textStyle;
-        this.normalColor = properties.normalColor;
-        this.hoverColor = properties.hoverColor;
-        this.clickedColor = properties.clickedColor;
+        this.normalStyle = properties.normalStyle;
+        this.hoverStyle = properties.hoverStyle;
+        this.clickedStyle = properties.clickedStyle;
     }
     
     // Add the text to the screen
     add(position: Phaser.Math.Vector2, scene: Phaser.Scene) {
-        return (scene.add.text(position.x + this.offset.x, position.y + this.offset.y, this.text, this.textStyle).setOrigin(0.5));
+        console.log(this.normalStyle);
+        return (scene.add.text(position.x + this.offset.x, position.y + this.offset.y, this.text, this.normalStyle).setOrigin(0.5));
     }
 
-    pointerDown() {
-
-    }
-
-    pointerUp() {
+    pointerDown(text: Phaser.GameObjects.Text) {
 
     }
 
-    pointerMove() {
+    pointerUp(text: Phaser.GameObjects.Text) {
+
+    }
+
+    pointerMove(text: Phaser.GameObjects.Text) {
 
     }
 
     // Hover Start
     pointerOver(text: Phaser.GameObjects.Text) {
-        text.setColor(this.hoverColor);
+        text.setStyle(this.hoverStyle);
     }
 
     // Hover End
     pointerOut(text: Phaser.GameObjects.Text) {
-        text.setColor(this.normalColor);
+        text.setStyle(this.normalStyle);
     }
 }
