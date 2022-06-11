@@ -8,8 +8,14 @@ import {
     playButtonText, playButtonImage, statsButtonText, statsButtonImage,
     settingsButtonText, settingsButtonImage, titleTextStyleA, titleTextStyleB, titleTextStyleC
 } from "../constants/StartMenuUI";
+import { GoToGame, TitleClick } from "../interactions/UIInteractions";
 
 export default class StartMenu extends Phaser.Scene {
+    playButton: Button | undefined;
+    statsButton: Button | undefined;
+    settingsButton: Button | undefined;
+    titleText: Button | undefined;
+    
     constructor() {
         super("StartMenu");
     }
@@ -29,26 +35,30 @@ export default class StartMenu extends Phaser.Scene {
         
 
         // Menu Buttons
-        let playButton = new Button({ x: this.scale.width / 2 - 64, y: 400 }, new ButtonText(playButtonText), playButtonImage);
-        let statsButton = new Button({ x: this.scale.width / 2 - 62, y: 525 }, new ButtonText(statsButtonText), statsButtonImage);
-        let settingsButton = new Button({ x: this.scale.width / 2 - 64, y: 650 }, new ButtonText(settingsButtonText), settingsButtonImage);
+        this.playButton = new Button({ x: this.scale.width / 2 - 64, y: 400 }, new ButtonText(playButtonText, GoToGame), playButtonImage);
+        this.statsButton = new Button({ x: this.scale.width / 2 - 62, y: 525 }, new ButtonText(statsButtonText, GoToGame), statsButtonImage);
+        this.settingsButton = new Button({ x: this.scale.width / 2 - 64, y: 650 }, new ButtonText(settingsButtonText, GoToGame), settingsButtonImage);
 
-        playButton.add(Phaser.Math.Vector2.ZERO, this);
-        statsButton.add(Phaser.Math.Vector2.ZERO, this);
-        settingsButton.add(Phaser.Math.Vector2.ZERO, this);
+        this.playButton.add(Phaser.Math.Vector2.ZERO, this);
+        this.statsButton.add(Phaser.Math.Vector2.ZERO, this);
+        this.settingsButton.add(Phaser.Math.Vector2.ZERO, this);
 
 
 
         // Title Text
-        const titleText = new Button({ x: this.scale.width/2, y: 150 }, new ButtonText({
+        this.titleText = new Button({ x: this.scale.width/2, y: 150 }, new ButtonText({
             text: "oypu!",
             normalStyle: titleTextStyleA,
             hoverStyle: titleTextStyleB,
             clickedStyle: titleTextStyleC,
             origin: { x: 0.5, y: 0.5 },
             offset: undefined,
-        }));
+        }, TitleClick));
 
-        const sceneTitleText = titleText.add(Phaser.Math.Vector2.ZERO, this);
+        this.titleText.add(Phaser.Math.Vector2.ZERO, this);
+    }
+
+    update() {
+
     }
 }

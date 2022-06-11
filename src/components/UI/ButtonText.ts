@@ -2,44 +2,33 @@ import Phaser from "phaser";
 
 import Text from "~/interfaces/UI/Text/Text";
 import InteractiveText from "~/interfaces/UI/Text/InteractiveText";
-import PhaserObject from "~/interfaces/PhaserObject";
-import VectorPos from "~/interfaces/universal/VectorPos";
+import UIText from "./UIText";
 
 // Contains interaction definitions for each mouse state
-export default class ButtonText implements Text, InteractiveText, PhaserObject {
-    text: string;
-    offset: VectorPos = { x: 0, y: 0 };
-    origin: VectorPos = { x: 0, y: 0 };
-    normalStyle: Phaser.Types.GameObjects.Text.TextStyle;
-    hoverStyle: Phaser.Types.GameObjects.Text.TextStyle;
-    clickedStyle: Phaser.Types.GameObjects.Text.TextStyle;
-
-    constructor(properties: Text) {
-        this.text = properties.text;
-        if (properties.offset != null)
-            this.offset = properties.offset;
-        if (properties.origin != null)
-            this.origin = properties.origin;
-        this.normalStyle = properties.normalStyle;
-        this.hoverStyle = properties.hoverStyle;
-        this.clickedStyle = properties.clickedStyle;
-    }
+export default class ButtonText extends UIText implements InteractiveText {
+    clickedAction: Function;
+    clicked: boolean = false;
     
-    // Add the text to the screen
-    add(position: VectorPos, scene: Phaser.Scene) {
-        return (scene.add.text(position.x + this.offset.x, position.y + this.offset.y, this.text, this.normalStyle)).setOrigin(this.origin.x, this.origin.y);
+    constructor(properties: Text, clickedAction: Function) {
+        super(properties);
+        this.clickedAction = clickedAction;
     }
 
     // Event for when the pointer is held down
     // Text style is swapped to the clicked style
     pointerDown(text: Phaser.GameObjects.Text) {
         text.setStyle(this.clickedStyle);
+        this.clicked = true;
     }
 
     // Event for when the pointer is released after being held down
     // Text style is swapped to the hover style
     pointerUp(text: Phaser.GameObjects.Text) {
         text.setStyle(this.hoverStyle);
+        
+        // Perform action if clicked
+        if (this.clicked) this.clickedAction(this, text);
+        this.clicked = false;
     }
 
     // Event for when the pointer is moved while over the text
@@ -58,5 +47,7 @@ export default class ButtonText implements Text, InteractiveText, PhaserObject {
     // Text style is swapped to the normal style
     pointerOut(text: Phaser.GameObjects.Text) {
         text.setStyle(this.normalStyle);
+
+        this.clicked = false;
     }
 }
