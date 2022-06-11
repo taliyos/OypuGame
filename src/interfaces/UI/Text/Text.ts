@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import VectorPos from "../universal/VectorPos";
+import VectorPos from "../../universal/VectorPos";
 
 // Interface for Text
 // It has separate styles

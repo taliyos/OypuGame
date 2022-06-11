@@ -1,5 +1,5 @@
-import DefaultImage from "~/interfaces/UI/DefaultImage";
-import Text from "~/interfaces/UI/Text";
+import BasicUISprite from "~/interfaces/UI/Sprite/BasicUISprite";
+import Text from "~/interfaces/UI/Text/Text";
 
 // Default Text Styles
 export const normalTextStyle: Phaser.Types.GameObjects.Text.TextStyle = {
@@ -54,7 +54,7 @@ export const playButtonText: Text = {
     origin: { x: 0, y: 0.5 },
 };
 
-export const playButtonImage: DefaultImage = {
+export const playButtonImage: BasicUISprite = {
     texture: "piece_sheet",
     frame: 1,
     offset: { x: -50, y: 0 },
@@ -70,7 +70,7 @@ export const statsButtonText: Text = {
     origin: { x: 0, y: 0.5 },
 }
 
-export const statsButtonImage: DefaultImage = {
+export const statsButtonImage: BasicUISprite = {
     texture: "piece_sheet",
     frame: 3,
     offset: { x: -50, y: 0 },
@@ -86,7 +86,7 @@ export const settingsButtonText: Text = {
     origin: { x: 0, y: 0.5 },
 }
 
-export const settingsButtonImage: DefaultImage = {
+export const settingsButtonImage: BasicUISprite = {
     texture: "piece_sheet",
     frame: 2,
     offset: { x: -50, y: 0 },
