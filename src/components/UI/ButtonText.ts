@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 
-import Text from "~/interfaces/UI/Text";
-import InteractiveText from "~/interfaces/UI/InteractiveText";
+import Text from "~/interfaces/UI/Text/Text";
+import InteractiveText from "~/interfaces/UI/Text/InteractiveText";
 import PhaserObject from "~/interfaces/PhaserObject";
 import VectorPos from "~/interfaces/universal/VectorPos";
 

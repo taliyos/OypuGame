@@ -1,28 +1,30 @@
 import Phaser from "phaser";
 import ButtonText from "./ButtonText";
-import DefaultImage from "~/interfaces/UI/DefaultImage";
 import PhaserObject from "~/interfaces/PhaserObject";
 import VectorPos from "~/interfaces/universal/VectorPos";
+import BasicUISprite from "~/interfaces/UI/Sprite/BasicUISprite";
+import UISprite from "./UISprite";
 
 export default class Button implements PhaserObject {
     position: VectorPos = { x: 0, y: 0 };
     text: ButtonText | undefined;
-    image: DefaultImage | undefined;
+    sprite: UISprite | undefined;
 
     private sceneText?: Phaser.GameObjects.Text;
     private sceneImage?: Phaser.GameObjects.Image; 
 
-    constructor(position: VectorPos, text?: ButtonText, image?: DefaultImage) {
+    constructor(position: VectorPos, text?: ButtonText, uiSprite?: BasicUISprite) {
         this.position = position;
-        if (text != undefined)
-            this.text = text;
-        if (image != undefined)
-            this.image = image;
 
-        if (text == null && image == null) {
+        if (text == undefined && uiSprite == undefined) {
             console.error("ERROR: A button must have at least an image or text.");
             return;
         }
+
+        if (text != undefined)
+            this.text = text;
+        if (uiSprite != undefined)
+            this.sprite = new UISprite(uiSprite);
 
         this.generateHitbox();
     }
@@ -50,16 +52,15 @@ export default class Button implements PhaserObject {
     }
 
     // Adds the button to the Phaser Game
-    add(position: Phaser.Math.Vector2, scene: Phaser.Scene) {
+    add(position: VectorPos, scene: Phaser.Scene) {
         // Add the text to the scene
         if (this.text != undefined) {
             this.sceneText = this.text.add(this.position, scene);
         }
 
         // Add the button to the scene
-        if (this.image != undefined) {
-            this.sceneImage = scene.add.image(this.position.x + this.image.offset.x, this.position.y + this.image.offset.y, this.image.texture, this.image.frame)
-                .setOrigin(0.5).setScale(this.image.scale.x, this.image.scale.y);
+        if (this.sprite != undefined) {
+            this.sceneImage = this.sprite.add(this.position, scene);
         }
 
         // Button now "exists" in scene, so make it interactive

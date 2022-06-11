@@ -1,7 +1,7 @@
 import Phaser from "phaser";
-import ButtonText from "../components/ButtonText";
+import ButtonText from "../components/UI/ButtonText";
 
-import Button from "../components/Button";
+import Button from "../components/UI/Button";
 
 import pieceSpriteSheet from "../static/pieces/full-sheet.png";
 import {
