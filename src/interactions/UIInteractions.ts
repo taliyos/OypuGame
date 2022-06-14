@@ -19,6 +19,6 @@ export function TitleClick(container: ButtonText, text: Phaser.GameObjects.Text)
 }
 
 // Changes the scene to the game
-export function GoToGame() {
-    alert("go to game!");
+export function GoToScene(scene: Phaser.Scenes.ScenePlugin, sceneName: string | Phaser.Scene) {
+    scene.start(sceneName);
 }
