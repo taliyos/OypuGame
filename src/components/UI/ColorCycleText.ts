@@ -4,12 +4,13 @@ import Text from "~/interfaces/UI/Text/Text";
 import VectorPos from "~/interfaces/universal/VectorPos";
 import ColorAnimation from "~/interfaces/animations/ColorAnimation";
 import Animation from "~/interfaces/animations/Animation";
+import PhaserObject from "~/interfaces/PhaserObject";
 
 // Unlike most other UI components, ColorCycleText maintains a copy of its
 // in-scene creation. This allows for ColorCycleText to update itself without
 // relying on a reference to be kept explicitly in the scene.
 // This functionality isn't needed for "static" components.
-export default class ColorCycleText extends UIText implements ColorAnimation, Animation {
+export default class ColorCycleText extends UIText implements ColorAnimation, Animation, PhaserObject {
     sceneObject: Phaser.GameObjects.Text | null | undefined;
     
     colors: Phaser.Display.Color[] = [];
@@ -33,7 +34,7 @@ export default class ColorCycleText extends UIText implements ColorAnimation, An
     }
 
     // Add the text to the screen
-    add(position: VectorPos, scene: Phaser.Scene) {
+    add(position: VectorPos, scene: Phaser.Scene): Phaser.GameObjects.Text {
         if (this.sceneObject != null) {
             console.warn("AnimatedText can only be added to the scene once.");
         }
