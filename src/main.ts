@@ -2,6 +2,7 @@ import Phaser from "phaser";
 
 // Scenes
 import StartMenu from "./scenes/StartMenu";
+import OfflineGame from "./scenes/OfflineGame";
 
 const config: Phaser.Types.Core.GameConfig = {
     type: Phaser.AUTO,
@@ -12,7 +13,7 @@ const config: Phaser.Types.Core.GameConfig = {
     },
     physics: {
     },
-    scene: [StartMenu],
+    scene: [StartMenu, OfflineGame],
     parent: "game"
 }
 
