@@ -9,12 +9,13 @@ import {
     settingsButtonText, settingsButtonImage, titleTextStyleA, titleTextStyleB, titleTextStyleC
 } from "../constants/StartMenuUI";
 import { GoToGame, TitleClick } from "../interactions/UIInteractions";
+import ColorCycleText from "../components/UI/ColorCycleText";
 
 export default class StartMenu extends Phaser.Scene {
     playButton: Button | undefined;
     statsButton: Button | undefined;
     settingsButton: Button | undefined;
-    titleText: Button | undefined;
+    titleText: ColorCycleText | undefined;
     
     constructor() {
         super("StartMenu");
@@ -46,7 +47,27 @@ export default class StartMenu extends Phaser.Scene {
 
 
         // Title Text
-        this.titleText = new Button({ x: this.scale.width/2, y: 150 }, new ButtonText({
+        this.titleText = new ColorCycleText({
+            text: "oypu!",
+            normalStyle: titleTextStyleA,
+            hoverStyle: titleTextStyleB,
+            clickedStyle: titleTextStyleC,
+            origin: { x: 0.5, y: 0.5 },
+            offset: { x: this.scale.width/2, y: 150 },
+        },
+            ["#ffffff",
+            "#ffaa00",
+            "#ffee00", 
+            "#4466ff", 
+            "#bb11ef"],
+            0.5,
+        {
+            repeat: true,
+            bounce: true
+        });
+        this.titleText.add({x: 0, y: 0}, this);
+        //this.titleText
+        /*this.titleText = new Button({ x: this.scale.width/2, y: 150 }, new ButtonText({
             text: "oypu!",
             normalStyle: titleTextStyleA,
             hoverStyle: titleTextStyleB,
@@ -55,10 +76,10 @@ export default class StartMenu extends Phaser.Scene {
             offset: undefined,
         }, TitleClick));
 
-        this.titleText.add(Phaser.Math.Vector2.ZERO, this);
+        this.titleText.add(Phaser.Math.Vector2.ZERO, this);*/
     }
 
-    update() {
-
+    update(time: number, delta: number) {
+        this.titleText.update(delta);
     }
 }
