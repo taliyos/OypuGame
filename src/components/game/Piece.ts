@@ -1,5 +1,6 @@
 import PhaserObject from "~/interfaces/PhaserObject";
 import VectorPos from "~/interfaces/universal/VectorPos";
+import { PieceScale } from "../../constants/GameOptions";
 
 // A single piece
 // This is not connected to anything else and operates individually
@@ -24,6 +25,7 @@ export default class Piece implements PhaserObject {
 
     add(position: VectorPos, scene: Phaser.Scene): Phaser.GameObjects.Image {
         this.sceneImage = scene.add.image(this.position.x + position.x, this.position.y + position.y, this.texture, this.frame).setOrigin(0.5);
+        this.sceneImage.setScale(PieceScale.x, PieceScale.y)
         return this.sceneImage;
     }
 
