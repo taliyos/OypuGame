@@ -13,7 +13,7 @@ const config: Phaser.Types.Core.GameConfig = {
     },
     physics: {
     },
-    scene: [OfflineGame],
+    scene: [StartMenu, OfflineGame],
     parent: "game"
 }
 

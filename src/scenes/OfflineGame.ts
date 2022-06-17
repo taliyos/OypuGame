@@ -28,6 +28,7 @@ export default class OfflineGame extends Phaser.Scene {
     }
 
     create() {
+        this.gameManager.create(this);
         this.gameManager.test(this);
 
         this.sampleText = new ColorCycleText({
