@@ -10,6 +10,7 @@ export default class Piece {
     frame: integer;
     gravity: boolean = false;
     position: VectorPos = { x : 0, y: 0 };
+    boardPos: VectorPos | undefined;
     linkedBoard?: Board;
     sceneImage?: Phaser.GameObjects.Image;
 
@@ -50,16 +51,35 @@ export default class Piece {
     // This only utilizes the world's cooridnate system and doesn't care about the
     // board.
     private applyGravity(delta: number) {
-        this.position.y += 1 * delta;
-        this.sceneImage?.setPosition(this.position.x, this.position.y);  
+        this.position.y += 0.5 * delta;
+        this.updatePosition(); 
     }
 
+    // Checks for collision with other pieces and the bottom of the board
+    // If a collision is found, gravity is stopped and the piece is added
+    // to the board.
     private checkForCollision() {
         // Check bottom of the board
         if (this.linkedBoard == undefined) return;
         let boardPos = this.linkedBoard.worldSpaceToBoard(this.position);
-        if (boardPos.y >= this.linkedBoard.y - 1) {
+        if (this.linkedBoard.checkPieceDownCollision(boardPos)) {
+            // Add Piece to the board
+            this.linkedBoard.addPieceToBoard(this, boardPos);
             this.gravity = false;
+
+            // Round boardPos to integer
+            this.boardPos = boardPos;
+
+            // "Snap" position to boardPos
+            this.position = this.linkedBoard.boardToWorldSpace(this.boardPos);
+            this.updatePosition();
         }
+    }
+
+    // Updates the position of the piece image based on the internally stored
+    // position variable.
+    // Modifies the sceneImage position
+    private updatePosition() {
+        this.sceneImage?.setPosition(this.position.x, this.position.y); 
     }
 }
