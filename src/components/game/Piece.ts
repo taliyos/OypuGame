@@ -61,16 +61,28 @@ export default class Piece {
     private checkForCollision() {
         // Check bottom of the board
         if (this.linkedBoard == undefined) return;
-        let boardPos = this.linkedBoard.worldSpaceToBoard(this.position);
-        if (this.linkedBoard.checkPieceDownCollision(boardPos)) {
+        this.boardPos = this.linkedBoard.worldSpaceToBoard(this.position);
+        if (this.linkedBoard.checkPieceDownCollision(this.boardPos)) {
             // Add Piece to the board
-            this.linkedBoard.addPieceToBoard(this, boardPos);
+            this.linkedBoard.addPieceToBoard(this, this.boardPos);
             this.gravity = false;
 
-            // Round boardPos to integer
-            this.boardPos = boardPos;
-
             // "Snap" position to boardPos
+            this.position = this.linkedBoard.boardToWorldSpace(this.boardPos);
+            this.updatePosition();
+        }
+    }
+
+    // Player Input Interactions
+
+    // Moves the piece along the x-axis, as long as the new position is valid
+    // Will run without errors no matter the input
+    move(dir: integer) {
+        dir = -1;
+        if (this.linkedBoard == undefined || this.boardPos == undefined) return;
+        if (dir == 0) return;
+        else if (!this.linkedBoard.checkPieceXCollision(this.boardPos, dir)) {
+            this.boardPos.x += dir;
             this.position = this.linkedBoard.boardToWorldSpace(this.boardPos);
             this.updatePosition();
         }

@@ -9,6 +9,7 @@ import Piece from "./Piece";
 export default class Board {
     x: integer = 6;
     y: integer = 12;
+    absoluteY: integer = 14;
     board: BoardTile[][];
     boardPos: VectorPos = { x: TileSize.x / 2, y: TileSize.y / 2 };
     startCoord: VectorPos = { x: 3, y: -1 };
@@ -18,6 +19,8 @@ export default class Board {
         if (size) {
             this.x = size.x;
             this.y = size.y;
+            // We need two extra rows that are "invisible" above the screen
+            this.absoluteY = this.y + 2;
         }
 
         this.board = new Array<Array<BoardTile>>();
@@ -28,7 +31,7 @@ export default class Board {
 
     // Creates the board
     createBoard(): void {
-        for (let y = 0; y < this.y; y++) {
+        for (let y = 0; y < this.absoluteY; y++) {
             let row: BoardTile[] = new Array<BoardTile>();
             for (let x = 0; x < this.x; x++) {
                 row.push({
@@ -53,6 +56,7 @@ export default class Board {
     // or it is at the bottom of the board
     // Throws an error if the x position is out of bounds | (0 < pos.x < this.x)
     // Throws an error if the y position is out of bounds | (pos.y < this.y)
+    // pos must be in terms of visible space, not absolute
     checkPieceDownCollision(pos: VectorPos) : boolean {
         // Check if x pos is valid
         if (pos.x < 0 || pos.x >= this.x) {
@@ -60,7 +64,7 @@ export default class Board {
         }
         // Check if y pos is valid
         if (pos.y >= this.y) {
-            throw new Error("Position is out of bounds. Y can't exceed " + (this.y - 1));
+            throw new Error("Position is out of bounds. Y can't exceed " + (this.absoluteY - 1));
         }
 
         // Check if pos is at the bottom of the board
@@ -72,7 +76,32 @@ export default class Board {
         };
 
         // Check if there is a piece at downPos
-        if (this.board[downPos.y][downPos.x].piece != undefined) return true;
+        if (this.board[this.boardToAbsoluteY(downPos.y)][downPos.x].piece != undefined) return true;
+
+        return false;
+    }
+
+    // dir must be either -1 or 1
+    // Returns true if there is a piece in the direction specified
+    // Returns false otherwise
+    checkPieceXCollision(pos: VectorPos, dir: integer) : boolean {
+        // Check if x pos is valid
+        if (pos.x < 0 || pos.x >= this.x) {
+            throw new Error("Position is out of bounds. X must be between 0 and " + this.x + ".");
+        }
+        // Check if y pos is valid
+        if (pos.y >= this.y) {
+            throw new Error("Position is out of bounds. Y can't exceed " + (this.y - 1));
+        }
+        console.log("POS.Y: " + pos.y);
+
+        if (pos.x + dir < 0 || pos.x + dir >= this.x) return true;
+
+        // Check for cases where the piece is up against a wall
+        if ((pos.x == this.x - 1 && dir == 1) || (pos.x == 0 && dir == -1)) return true;
+
+        // Check for cases where there is another piece next to it
+        if (this.board[this.boardToAbsoluteY(pos.y)][pos.x + dir].piece != undefined) return true;
 
         return false;
     }
@@ -87,10 +116,10 @@ export default class Board {
             this.gameManager.gameOver();
             return;
         }
-        if (this.board[pos.y][pos.x].piece != undefined) {
+        if (this.board[this.boardToAbsoluteY(pos.y)][pos.x].piece != undefined) {
             throw new Error("There is already a piece at (" + pos.x + ", " + pos.y + ")");
         }
-        this.board[pos.y][pos.x].piece = piece;
+        this.board[this.boardToAbsoluteY(pos.y)][pos.x].piece = piece;
     }
 
     // HELPERS
@@ -118,6 +147,12 @@ export default class Board {
         result.y = Math.floor(result.y);
 
         return result;
+    }
+
+    // Converts between the visible board and the absolute board's y
+    // coordinate.
+    boardToAbsoluteY(y: number): number {
+        return y + 2;
     }
 
     // DEBUG

@@ -13,12 +13,14 @@ export default class GameManager {
     activePieces: Piece[];
 
     gameRun: boolean = true;
+    movementInput: integer;
 
     constructor(pieceSheet: string) {
         this.pieceSheet = pieceSheet;
         this.gravityPieces = [];
         this.activePieces = [];
         this.board = new Board(this, { x: 6, y: 12 });
+        this.movementInput = 0;
     }
 
     // Phaser scene additions are here since they aren't ready when
@@ -49,6 +51,7 @@ export default class GameManager {
             this.gravityPieces[i].update(delta);
         }
         for (let i = 0; i < this.activePieces.length; i++) {
+            this.activePieces[i].move(this.movementInput);
             if (!this.activePieces[i].gravity) {
                 this.activePieces.splice(i);
                 i--;
@@ -67,5 +70,23 @@ export default class GameManager {
 
     gameOver() {
         this.gameRun = false;
+    }
+
+    // Input
+
+    // Should input be buffered until it can be run?
+    playerMoveInput() {
+        let input = this.movementInput;
+        //this.movementInput = 0;
+        return input;
+    }
+
+    moveLeft() {
+        console.log(this.movementInput + " :: " + -1);
+        this.movementInput = -1;
+    }
+
+    moveRight() {
+        this.movementInput = 1;
     }
 }

@@ -50,6 +50,10 @@ export default class OfflineGame extends Phaser.Scene {
             bounce: true
         });
         this.sampleText.add({x: 0, y: 0}, this);
+
+        // Player Input Setup
+        this.input.keyboard.on("keydown-A", this.gameManager.moveLeft, this);
+        this.input.keyboard.on("keydown-D", this.gameManager.moveRight, this);
     }
 
     update(time: number, delta:number) {
