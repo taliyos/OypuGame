@@ -54,7 +54,7 @@ export default class OfflineGame extends Phaser.Scene {
 
     update(time: number, delta:number) {
         this.sampleText?.update(delta);
-        this.gameManager.update(delta);
+        this.gameManager.update(delta, this);
     }
 
 }

@@ -2,6 +2,7 @@ import BoardTile from "~/interfaces/game/BoardTile";
 import VectorPos from "~/interfaces/universal/VectorPos";
 
 import { GapSize, TileSize } from "../../constants/GameOptions";
+import GameManager from "./GameManager";
 import Piece from "./Piece";
 
 // Keeps of track of what piece is where
@@ -11,14 +12,16 @@ export default class Board {
     board: BoardTile[][];
     boardPos: VectorPos = { x: TileSize.x / 2, y: TileSize.y / 2 };
     startCoord: VectorPos = { x: 3, y: -1 };
+    gameManager: GameManager;
 
-    constructor(size?: VectorPos) {
+    constructor(gameManager: GameManager, size?: VectorPos) {
         if (size) {
             this.x = size.x;
             this.y = size.y;
         }
 
         this.board = new Array<Array<BoardTile>>();
+        this.gameManager = gameManager;
 
         this.createBoard();
     }
@@ -79,6 +82,11 @@ export default class Board {
     // Will throw an error if there is already a piece registered to the
     // specified pos
     addPieceToBoard(piece: Piece, pos: VectorPos) {
+        if (pos.y < 0) {
+            console.log("GAME OVER");
+            this.gameManager.gameOver();
+            return;
+        }
         if (this.board[pos.y][pos.x].piece != undefined) {
             throw new Error("There is already a piece at (" + pos.x + ", " + pos.y + ")");
         }
