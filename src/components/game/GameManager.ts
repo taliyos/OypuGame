@@ -1,6 +1,7 @@
 // Handles the game and it's logic
 // Responsible for creating pieces, checking for piece connections,
 
+import ActivePiece from "./ActivePiece";
 import Board from "./Board";
 import Piece from "./Piece";
 
@@ -10,7 +11,7 @@ export default class GameManager {
     board: Board;
 
     gravityPieces: Piece[];
-    activePieces: Piece[];
+    activePiece?: ActivePiece;
 
     gameRun: boolean = true;
     movementInput: integer;
@@ -18,7 +19,6 @@ export default class GameManager {
     constructor(pieceSheet: string) {
         this.pieceSheet = pieceSheet;
         this.gravityPieces = [];
-        this.activePieces = [];
         this.board = new Board(this, { x: 6, y: 12 });
         this.movementInput = 0;
     }
@@ -33,16 +33,12 @@ export default class GameManager {
 
     // Creates a random piece to display on the screen
     test(scene: Phaser.Scene) {
-        let piece = new Piece(this.pieceSheet, 15);
-        // this.board.board[0][0].piece = piece;
-        piece.add(this.board.startCoord, this.board, scene);
-        piece.startGravity();
-        this.activePieces.push(piece);
-        this.gravityPieces.push(piece);
-
-        //let piece2 = new Piece(this.pieceSheet, 35);
-        //piece2.add({ x: 800, y: 300 }, scene);
         this.board.drawDebug(scene);
+
+        let piece = new Piece(this.pieceSheet, 15);
+        let piece2 = new Piece(this.pieceSheet, 16);
+        this.activePiece = new ActivePiece(piece, piece2, this.board);
+        this.activePiece.start(scene);
     }
 
     update(delta: number, scene: Phaser.Scene) {
@@ -51,6 +47,8 @@ export default class GameManager {
             this.gravityPieces[i].update(delta);
         }
 
+        this.activePiece?.update(delta, this.playerMoveInput(), 0);
+        /*
         // Update the active piece
         for (let i = 0; i < this.activePieces.length; i++) {
             // Try to move the piece
@@ -60,16 +58,16 @@ export default class GameManager {
                 this.activePieces.splice(i);
                 i--;
             }
-        }
+        }*/
 
-        if (this.activePieces.length == 0) {
+        /*if (this.activePieces.length == 0) {
             let piece = new Piece(this.pieceSheet, 15);
             // this.board.board[0][0].piece = piece;
             piece.add(this.board.startCoord, this.board, scene);
             piece.startGravity();
             this.activePieces.push(piece);
             this.gravityPieces.push(piece);
-        }
+        }*/
     }
 
     gameOver() {

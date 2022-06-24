@@ -73,27 +73,10 @@ export default class Piece {
         }
     }
 
-    // Player Input Interactions
-
-    // Moves the piece along the x-axis, as long as the new position is valid
-    // Will run without errors no matter the input
-    move(dir: integer) {
-        if (this.linkedBoard == undefined || this.boardPos == undefined) return;
-        if (dir == 0 || dir == undefined) return;
-        else if (!this.linkedBoard.checkPieceXCollision(this.position, dir)) {
-            // Only update the x position
-            // Otherwise there will be a noticeable "jump" to lock into a board
-            // space y position.
-            this.boardPos.x += dir;
-            this.position.x = this.linkedBoard.boardToWorldSpace(this.boardPos).x;
-            this.updatePosition();
-        }
-    }
-
     // Updates the position of the piece image based on the internally stored
     // position variable.
     // Modifies the sceneImage position
-    private updatePosition() {
+    updatePosition() {
         this.sceneImage?.setPosition(this.position.x, this.position.y); 
     }
 }
