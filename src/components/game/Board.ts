@@ -81,27 +81,30 @@ export default class Board {
         return false;
     }
 
+    // Checks to see if there is a piece in the direction specified.
+    // --------------------------
     // dir must be either -1 or 1
+    // pos must be in world space coordinates
     // Returns true if there is a piece in the direction specified
     // Returns false otherwise
     checkPieceXCollision(pos: VectorPos, dir: integer) : boolean {
-        // Check if x pos is valid
-        if (pos.x < 0 || pos.x >= this.x) {
-            throw new Error("Position is out of bounds. X must be between 0 and " + this.x + ".");
+        let boardPos = this.worldSpaceToBoard(pos, true);
+        // Check if x boardPos is valid
+        if (boardPos.x < 0 || boardPos.x >= this.x) {
+            throw new Error("Position is out of bounds. It's " + boardPos.x + ", but x must be between 0 and " + this.x + ".");
         }
-        // Check if y pos is valid
-        if (pos.y >= this.y) {
+        // Check if y boardPos is valid
+        if (boardPos.y >= this.y) {
             throw new Error("Position is out of bounds. Y can't exceed " + (this.y - 1));
         }
-        console.log("POS.Y: " + pos.y);
 
-        if (pos.x + dir < 0 || pos.x + dir >= this.x) return true;
+        if (boardPos.x + dir < 0 || boardPos.x + dir >= this.x) return true;
 
         // Check for cases where the piece is up against a wall
-        if ((pos.x == this.x - 1 && dir == 1) || (pos.x == 0 && dir == -1)) return true;
+        if ((boardPos.x == this.x - 1 && dir == 1) || (boardPos.x == 0 && dir == -1)) return true;
 
         // Check for cases where there is another piece next to it
-        if (this.board[this.boardToAbsoluteY(pos.y)][pos.x + dir].piece != undefined) return true;
+        if (this.board[this.boardToAbsoluteY(boardPos.y)][boardPos.x + dir].piece != undefined) return true;
 
         return false;
     }
@@ -133,7 +136,10 @@ export default class Board {
     }
 
     // Returns the given coordinate in board space coordinates
-    worldSpaceToBoard(coord: VectorPos): VectorPos {
+    // The optional "ahead" parameter determines how the y position is interpreted
+    // With ahead set to true, the function will consider the piece's y position
+    // on the board as in the next space (down visually or higher in terms of the stored structure)
+    worldSpaceToBoard(coord: VectorPos, ahead: boolean = false): VectorPos {
         let result: VectorPos = { x: coord.x, y: coord.y };
 
         result.x -= this.boardPos.x;
@@ -144,7 +150,11 @@ export default class Board {
         result.y -= this.boardPos.y;
         result.y *= 1.000;
         result.y /= GapSize.y;
-        result.y = Math.floor(result.y);
+
+        if (!ahead)
+            result.y = Math.floor(result.y);
+        else
+            result.y = Math.ceil(result.y);
 
         return result;
     }

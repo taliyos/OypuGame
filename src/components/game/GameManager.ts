@@ -50,8 +50,12 @@ export default class GameManager {
         for (let i = 0; i < this.gravityPieces.length; i++) {
             this.gravityPieces[i].update(delta);
         }
+
+        // Update the active piece
         for (let i = 0; i < this.activePieces.length; i++) {
-            this.activePieces[i].move(this.movementInput);
+            // Try to move the piece
+            this.activePieces[i].move(this.playerMoveInput());
+
             if (!this.activePieces[i].gravity) {
                 this.activePieces.splice(i);
                 i--;
@@ -75,14 +79,13 @@ export default class GameManager {
     // Input
 
     // Should input be buffered until it can be run?
-    playerMoveInput() {
+    playerMoveInput() : number {
         let input = this.movementInput;
-        //this.movementInput = 0;
+        this.movementInput = 0;
         return input;
     }
 
     moveLeft() {
-        console.log(this.movementInput + " :: " + -1);
         this.movementInput = -1;
     }
 

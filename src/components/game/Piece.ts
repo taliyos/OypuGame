@@ -78,12 +78,14 @@ export default class Piece {
     // Moves the piece along the x-axis, as long as the new position is valid
     // Will run without errors no matter the input
     move(dir: integer) {
-        dir = -1;
         if (this.linkedBoard == undefined || this.boardPos == undefined) return;
-        if (dir == 0) return;
-        else if (!this.linkedBoard.checkPieceXCollision(this.boardPos, dir)) {
+        if (dir == 0 || dir == undefined) return;
+        else if (!this.linkedBoard.checkPieceXCollision(this.position, dir)) {
+            // Only update the x position
+            // Otherwise there will be a noticeable "jump" to lock into a board
+            // space y position.
             this.boardPos.x += dir;
-            this.position = this.linkedBoard.boardToWorldSpace(this.boardPos);
+            this.position.x = this.linkedBoard.boardToWorldSpace(this.boardPos).x;
             this.updatePosition();
         }
     }
