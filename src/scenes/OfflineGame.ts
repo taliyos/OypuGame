@@ -54,6 +54,8 @@ export default class OfflineGame extends Phaser.Scene {
         // Player Input Setup
         this.input.keyboard.on("keydown-A", () => {this.gameManager.moveLeft()}, this);
         this.input.keyboard.on("keydown-D", () => {this.gameManager.moveRight()}, this);
+        this.input.keyboard.on("keydown-LEFT", () => {this.gameManager.rotLeft()}, this);
+        this.input.keyboard.on("keydown-RIGHT", () => {this.gameManager.rotRight()}, this);
     }
 
     update(time: number, delta:number) {

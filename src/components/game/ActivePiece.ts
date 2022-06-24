@@ -1,5 +1,6 @@
 import Piece from "./Piece";
 import Board from "./Board";
+import { GapSize } from "../../constants/GameOptions";
 
 // Holds two active pieces
 export default class ActivePiece {
@@ -34,7 +35,7 @@ export default class ActivePiece {
         }
         else if (this.rotation == 1) {
             if(dir == 1) piece = this.topPiece;
-            piece = this.bottomPiece;
+            else piece = this.bottomPiece;
         }
         else if (this.rotation == 2) {
             piece = this.topPiece;
@@ -63,24 +64,62 @@ export default class ActivePiece {
     // Rotates the pieces as a group
     // dir must be -1, 0, or 1
     rotate(dir: number) {
+        if (dir == 0) return;
+        this.rotation += dir;
+        if (this.rotation > 3 ) this.rotation = 0;
+        else if (this.rotation < 0) this.rotation = 3;
         // [T] 
         // [B]
         if (this.rotation == 0) {
-
+            // This rotation is always possible since nothing can be above
+            // the bottom piece
+            // This case catches recursive calls
+            this.topPiece.position = {
+                x: this.bottomPiece.position.x,
+                y: this.bottomPiece.position.y - GapSize.y
+            };
         }
         // [B][T]
         else if (this.rotation == 1) {
-            
+            // This rotation is not always possible, check to see if it can be done
+            if (this.linkedBoard.checkPieceXCollision(this.bottomPiece.position, 1)) {
+                // Rotation is impossible try to progress one further
+                this.rotate(dir);
+                return;
+            }
+            this.topPiece.position = {
+                x: this.bottomPiece.position.x + GapSize.x,
+                y: this.bottomPiece.position.y
+            }
         } 
         // [B]
         // [T]
         else if (this.rotation == 2) {
-
+            // This rotation is not always possible
+            if (this.bottomPiece.boardPos == undefined 
+                || this.linkedBoard.checkPieceDownCollision(this.bottomPiece.boardPos)) {
+                this.rotate(dir);
+                return;
+            }
+            this.topPiece.position = {
+                x: this.bottomPiece.position.x,
+                y: this.bottomPiece.position.y + GapSize.y
+            }
         } 
         // [T][B]
         else if (this.rotation == 3) {
-
+            // This rotation is not always possible
+            if (this.linkedBoard.checkPieceXCollision(this.bottomPiece.position, -1)) {
+                this.rotate(dir);
+                return;
+            }
+            this.topPiece.position = {
+                x: this.bottomPiece.position.x - GapSize.x,
+                y: this.bottomPiece.position.y
+            }
         }
+
+        this.topPiece.updatePosition();
     }
 
     // Adds the pieces to the screen
@@ -104,7 +143,7 @@ export default class ActivePiece {
 
         // Move the pieces
         this.move(moveDir);
-
+        this.rotate(rotDir);
     }
 
 }
