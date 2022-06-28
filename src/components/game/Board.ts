@@ -112,11 +112,14 @@ export default class Board {
     // Adds the specified piece to the board at the specified location
     // piece can't already be in the board
     // Will throw an error if there is already a piece registered to the
-    // specified pos
+    // specified pos (won't if the piece is itself)
     addPieceToBoard(piece: Piece, pos: VectorPos) {
         if (pos.y < 0) {
             console.log("GAME OVER");
             this.gameManager.gameOver();
+            return;
+        }
+        if (this.board[this.boardToAbsoluteY(pos.y)][pos.x].piece == piece) {
             return;
         }
         if (this.board[this.boardToAbsoluteY(pos.y)][pos.x].piece != undefined) {

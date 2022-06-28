@@ -136,14 +136,22 @@ export default class ActivePiece {
 
     // Updates both pieces, performing additional checks for collision
     // and allowing rotation and movement to take place.
-    update(delta: number, moveDir: number, rotDir: number) {
+    update(delta: number, moveDir: number, rotDir: number): boolean {
         // Update each piece
-        this.bottomPiece.update(delta);
-        this.topPiece.update(delta);
+        let reachedEdgeBottom = this.bottomPiece.update(delta);
+        let reachedEdgeTop = this.topPiece.update(delta);
 
         // Move the pieces
         this.move(moveDir);
         this.rotate(rotDir);
+
+        if (reachedEdgeBottom || reachedEdgeTop) {
+            console.log("ADD TO BOARD");
+            this.bottomPiece.addToBoard();
+            this.topPiece.addToBoard();
+            return false;
+        }
+        return true;
     }
 
 }

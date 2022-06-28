@@ -49,7 +49,13 @@ export default class GameManager {
             this.gravityPieces[i].update(delta);
         }
 
-        this.activePiece?.update(delta, this.playerMoveInput(), this.playerRotateInput());
+        let result = this.activePiece?.update(delta, this.playerMoveInput(), this.playerRotateInput());
+        if (!result) {
+            let piece = new Piece(this.pieceSheet, 15);
+            let piece2 = new Piece(this.pieceSheet, 16);
+            this.activePiece = new ActivePiece(piece, piece2, this.board);
+            this.activePiece.start(scene);
+        }
         /*
         // Update the active piece
         for (let i = 0; i < this.activePieces.length; i++) {

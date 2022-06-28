@@ -37,14 +37,33 @@ export default class Piece {
         return this.sceneImage;
     }
 
-    update(delta: number) {
+    // Attempts to add the piece to the board
+    // If the piece has already been added to the board, it will not add the piece
+    addToBoard() {
+        if (this.linkedBoard == undefined || this.boardPos == undefined) return;
+        // Add Piece to the board
+        this.linkedBoard.addPieceToBoard(this, this.boardPos);
+        this.gravity = false;
+
+        // "Snap" position to boardPos
+        this.position = this.linkedBoard.boardToWorldSpace(this.boardPos);
+        this.updatePosition();
+    }
+
+    // Attempts to remove the piece from the board
+    // If the piece is not on the board, nothing happens
+    removeFromBoard() {
+
+    }
+
+    update(delta: number) : boolean {
         if (!this.gravity) {
             console.warn("update() should not be called when not affected by gravity!");
-            return;
+            return false;
         }
         
         this.applyGravity(delta);
-        this.checkForCollision(); 
+        return this.checkForCollision(); 
     }
 
     // Applies gravity to the piece, updating the internal position in the process
@@ -58,19 +77,15 @@ export default class Piece {
     // Checks for collision with other pieces and the bottom of the board
     // If a collision is found, gravity is stopped and the piece is added
     // to the board.
-    private checkForCollision() {
+    private checkForCollision() : boolean {
         // Check bottom of the board
-        if (this.linkedBoard == undefined) return;
+        if (this.linkedBoard == undefined) return false;
         this.boardPos = this.linkedBoard.worldSpaceToBoard(this.position);
         if (this.linkedBoard.checkPieceDownCollision(this.boardPos)) {
-            // Add Piece to the board
-            this.linkedBoard.addPieceToBoard(this, this.boardPos);
-            this.gravity = false;
-
-            // "Snap" position to boardPos
-            this.position = this.linkedBoard.boardToWorldSpace(this.boardPos);
-            this.updatePosition();
+            this.addToBoard();
+            return true;
         }
+        return false;
     }
 
     // Updates the position of the piece image based on the internally stored
