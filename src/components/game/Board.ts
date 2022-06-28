@@ -128,6 +128,10 @@ export default class Board {
         this.board[this.boardToAbsoluteY(pos.y)][pos.x].piece = piece;
     }
 
+    removePieceFromBoard(pos: VectorPos) {
+        this.board[this.boardToAbsoluteY(pos.y)][pos.x].piece = undefined;
+    }
+
     // HELPERS
 
     // Returns the given coordinate in world space coordinates

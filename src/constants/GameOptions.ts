@@ -15,3 +15,5 @@ export const GapSize: VectorPos = {
     x: 80,
     y: 80,
 };
+
+export const BufferTime: number = 100;

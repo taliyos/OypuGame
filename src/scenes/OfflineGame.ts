@@ -60,7 +60,12 @@ export default class OfflineGame extends Phaser.Scene {
 
     update(time: number, delta:number) {
         this.sampleText?.update(delta);
+        if (this.sampleText) this.sampleText.text = this.getFPS(delta).toString() + " FPS";
         this.gameManager.update(delta, this);
+    }
+
+    getFPS(delta: number) : number {
+        return Math.ceil( 1000 / delta);
     }
 
 }

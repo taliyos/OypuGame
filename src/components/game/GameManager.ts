@@ -46,36 +46,45 @@ export default class GameManager {
     update(delta: number, scene: Phaser.Scene) {
         if (!this.gameRun) return;
         for (let i = 0; i < this.gravityPieces.length; i++) {
-            this.gravityPieces[i].update(delta);
+            if (this.gravityPieces[i].update(delta)) {
+                this.gravityPieces.splice(i);
+                i--;
+            }
+            
+        }
+
+        if (this.gravityPieces.length == 0 && this.activePiece == undefined) {             
+            this.createNewPiece(scene);
         }
 
         let result = this.activePiece?.update(delta, this.playerMoveInput(), this.playerRotateInput());
         if (!result) {
-            let piece = new Piece(this.pieceSheet, 15);
-            let piece2 = new Piece(this.pieceSheet, 16);
-            this.activePiece = new ActivePiece(piece, piece2, this.board);
-            this.activePiece.start(scene);
-        }
-        /*
-        // Update the active piece
-        for (let i = 0; i < this.activePieces.length; i++) {
-            // Try to move the piece
-            this.activePieces[i].move(this.playerMoveInput());
-
-            if (!this.activePieces[i].gravity) {
-                this.activePieces.splice(i);
-                i--;
+            if (this.activePiece == undefined 
+                || this.activePiece.bottomPiece.boardPos == undefined
+                || this.activePiece.topPiece.boardPos == undefined) return;
+            // Check the active piece for an overhang
+            if (!this.board.checkPieceDownCollision(this.activePiece?.bottomPiece.boardPos)) {
+                this.activePiece.bottomPiece.removeFromBoard();
+                this.gravityPieces.push(this.activePiece.bottomPiece);
+                this.activePiece.bottomPiece.startGravity();
             }
-        }*/
 
-        /*if (this.activePieces.length == 0) {
-            let piece = new Piece(this.pieceSheet, 15);
-            // this.board.board[0][0].piece = piece;
-            piece.add(this.board.startCoord, this.board, scene);
-            piece.startGravity();
-            this.activePieces.push(piece);
-            this.gravityPieces.push(piece);
-        }*/
+            if (!this.board.checkPieceDownCollision(this.activePiece?.topPiece.boardPos)) {
+                this.activePiece.topPiece.removeFromBoard();
+                this.gravityPieces.push(this.activePiece.topPiece);
+                this.activePiece.topPiece.startGravity();
+            }
+
+            this.activePiece = undefined;
+        }
+    }
+
+    // Test function
+    createNewPiece(scene: Phaser.Scene) {
+        let piece = new Piece(this.pieceSheet, 15);
+        let piece2 = new Piece(this.pieceSheet, 16);
+        this.activePiece = new ActivePiece(piece, piece2, this.board);
+        this.activePiece.start(scene);
     }
 
     gameOver() {

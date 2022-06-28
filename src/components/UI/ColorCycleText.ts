@@ -69,5 +69,7 @@ export default class ColorCycleText extends UIText implements ColorAnimation, An
                 this.endIteration = 0;
             }
         }
+
+        this.sceneObject.setText(this.text);
     }
 }

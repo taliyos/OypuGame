@@ -1,6 +1,6 @@
 import Piece from "./Piece";
 import Board from "./Board";
-import { GapSize } from "../../constants/GameOptions";
+import { GapSize, BufferTime } from "../../constants/GameOptions";
 
 // Holds two active pieces
 export default class ActivePiece {
@@ -10,6 +10,7 @@ export default class ActivePiece {
     linkedBoard: Board;
 
     rotation: number = 0;
+    bufferCounter: number = 0;
 
     constructor(bottomPiece: Piece, topPiece: Piece, linkedBoard: Board) {
         this.bottomPiece = bottomPiece;
@@ -28,6 +29,12 @@ export default class ActivePiece {
     move(dir: number) {
         if (this.bottomPiece.boardPos == undefined || this.topPiece.boardPos == undefined) return;
         if (dir == 0) return;
+
+        if (this.bufferCounter != 0) {
+            this.topPiece.gravity = true;
+            this.bottomPiece.gravity = true;
+        }
+
         let piece: Piece;
 
         if (this.rotation == 0) {
@@ -138,18 +145,25 @@ export default class ActivePiece {
     // and allowing rotation and movement to take place.
     update(delta: number, moveDir: number, rotDir: number): boolean {
         // Update each piece
-        let reachedEdgeBottom = this.bottomPiece.update(delta);
-        let reachedEdgeTop = this.topPiece.update(delta);
+        let reachedEdgeBottom = this.bottomPiece.update(delta, true);
+        let reachedEdgeTop = this.topPiece.update(delta, true);
 
         // Move the pieces
         this.move(moveDir);
         this.rotate(rotDir);
 
         if (reachedEdgeBottom || reachedEdgeTop) {
-            console.log("ADD TO BOARD");
-            this.bottomPiece.addToBoard();
-            this.topPiece.addToBoard();
-            return false;
+            this.bufferCounter += delta;
+            
+            // Snap and disable gravity
+            this.bottomPiece.bufferStop();
+            this.topPiece.bufferStop();
+
+            if (this.bufferCounter >= BufferTime) {
+                this.bottomPiece.addToBoard();
+                this.topPiece.addToBoard();
+                return false;
+            }
         }
         return true;
     }

@@ -41,7 +41,7 @@ export default class Piece {
     // If the piece has already been added to the board, it will not add the piece
     addToBoard() {
         if (this.linkedBoard == undefined || this.boardPos == undefined) return;
-        // Add Piece to the board
+        // Add Piece to thef board
         this.linkedBoard.addPieceToBoard(this, this.boardPos);
         this.gravity = false;
 
@@ -53,23 +53,38 @@ export default class Piece {
     // Attempts to remove the piece from the board
     // If the piece is not on the board, nothing happens
     removeFromBoard() {
+        if (this.linkedBoard == undefined || this.boardPos == undefined) return;
 
+        this.linkedBoard.removePieceFromBoard(this.boardPos);
     }
 
-    update(delta: number) : boolean {
-        if (!this.gravity) {
+    // Used when the active piece enters the buffer period where the piece
+    // can still be moved and rotating, but is no longer actively falling
+    bufferStop() {
+        this.gravity = false;
+
+        if (this.linkedBoard == undefined || this.boardPos == undefined) return;
+
+        // "Snap" position to boardPos
+        this.position = this.linkedBoard.boardToWorldSpace(this.boardPos);
+        this.updatePosition();
+    }
+
+    update(delta: number, active: boolean = false) : boolean {
+        if (!this.gravity && !active) {
             console.warn("update() should not be called when not affected by gravity!");
             return false;
         }
         
         this.applyGravity(delta);
-        return this.checkForCollision(); 
+        return this.checkForCollision(active); 
     }
 
     // Applies gravity to the piece, updating the internal position in the process
     // This only utilizes the world's cooridnate system and doesn't care about the
     // board.
     private applyGravity(delta: number) {
+        if (!this.gravity) return;
         this.position.y += 0.5 * delta;
         this.updatePosition(); 
     }
@@ -77,12 +92,13 @@ export default class Piece {
     // Checks for collision with other pieces and the bottom of the board
     // If a collision is found, gravity is stopped and the piece is added
     // to the board.
-    private checkForCollision() : boolean {
+    private checkForCollision(active: boolean = false) : boolean {
         // Check bottom of the board
         if (this.linkedBoard == undefined) return false;
         this.boardPos = this.linkedBoard.worldSpaceToBoard(this.position);
         if (this.linkedBoard.checkPieceDownCollision(this.boardPos)) {
-            this.addToBoard();
+            this.gravity = false;
+            if (!active) this.addToBoard();
             return true;
         }
         return false;
@@ -92,6 +108,6 @@ export default class Piece {
     // position variable.
     // Modifies the sceneImage position
     updatePosition() {
-        this.sceneImage?.setPosition(this.position.x, this.position.y); 
+        this.sceneImage?.setPosition(this.position.x, this.position.y);
     }
 }
