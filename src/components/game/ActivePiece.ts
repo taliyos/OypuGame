@@ -148,10 +148,6 @@ export default class ActivePiece {
         let reachedEdgeBottom = this.bottomPiece.update(delta, true);
         let reachedEdgeTop = this.topPiece.update(delta, true);
 
-        // Move the pieces
-        this.move(moveDir);
-        this.rotate(rotDir);
-
         if (reachedEdgeBottom || reachedEdgeTop) {
             this.bufferCounter += delta;
             
@@ -165,6 +161,11 @@ export default class ActivePiece {
                 return false;
             }
         }
+
+        // Move the pieces
+        this.move(moveDir);
+        this.rotate(rotDir);
+
         return true;
     }
 
