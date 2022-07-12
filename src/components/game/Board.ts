@@ -36,6 +36,7 @@ export default class Board {
             for (let x = 0; x < this.x; x++) {
                 row.push({
                     piece: undefined,
+                    chainId: -1
                 });
             }
             this.board.push(row);
@@ -190,6 +191,23 @@ export default class Board {
             if (color == color1) color = color2;
             else color = color1;
         }
+    }
+
+    // Prints the board to the console using chainIds
+    // Uses an array because javascript refuses to print
+    // duplicate lines
+    printDebug() {
+        let lines = [];
+        for (let y = 0; y < this.absoluteY; y++) {
+            let line = "";
+            for (let x = 0; x < this.x; x++) {
+                if (x != 0) line += ", ";
+                line += this.board[y][x].chainId;
+            }
+            lines.push(line);
+        }
+        console.log(lines);
+
     }
 
 }

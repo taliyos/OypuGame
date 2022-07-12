@@ -2,6 +2,7 @@ import PhaserObject from "~/interfaces/PhaserObject";
 import VectorPos from "~/interfaces/universal/VectorPos";
 import Board from "./Board";
 import { PieceScale } from "../../constants/GameOptions";
+import { PieceType } from "../../enums/PieceType";
 
 // A single piece
 // This is not connected to anything else and operates individually
@@ -11,12 +12,14 @@ export default class Piece {
     gravity: boolean = false;
     position: VectorPos = { x : 0, y: 0 };
     boardPos: VectorPos | undefined;
+    type: PieceType = PieceType.Red;
     linkedBoard?: Board;
     sceneImage?: Phaser.GameObjects.Image;
 
-    constructor(texture: string, frame: integer, position?: VectorPos) {
+    constructor(texture: string, frame: integer, type?: PieceType, position?: VectorPos) {
         this.texture = texture;
         this.frame = frame;
+        if (type) this.type = type;
         if (position) {
             this.position = position;
         }
