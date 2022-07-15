@@ -22,6 +22,7 @@ export default class GameManager {
     rotateInput: integer;
 
     chainAnalyzer: ChainAnalyzer;
+    minLength: number = 4;
 
     constructor(pieceSheet: string) {
         this.pieceSheet = pieceSheet;

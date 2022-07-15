@@ -16,6 +16,9 @@ export default class ChainAnalyzer {
         const chains : Map<number, VectorPos[]> = this.identifyChains();
         const validChains : Map<number, VectorPos[]> = this.getValidChains(chains);
 
+        console.log("VALID CHAINS");
+        console.log(validChains);
+
         this.destroyChains(validChains);
     }
 
@@ -73,12 +76,29 @@ export default class ChainAnalyzer {
 
     // Returns the map of chains with length greater than or equal than the required
     private getValidChains(chains : Map<number, VectorPos[]>) : Map<number, VectorPos[]> {
-        return chains;
+        let validChains = new Map<number, VectorPos[]>();
+
+        chains.forEach((value, key) => {
+            if (value.length >= this.manager.minLength) {
+                validChains.set(key, value);
+            }
+        });
+
+        return validChains;
     }
 
     // Destroys all chains that are specified
     private destroyChains(chains : Map<number, VectorPos[]>) {
         if (chains.size == 0) return;
+
+        chains.forEach((value, key) => {
+            for (let i = 0; i < value.length; i++) {
+                console.log(this.manager.board.board[value[i].y][value[i].x]);
+                this.manager.board.board[value[i].y][value[i].x].piece?.removeFromBoard();
+                this.manager.board.board[value[i].y][value[i].x].piece = undefined;
+                this.manager.board.board[value[i].y][value[i].x].chainId = -1;
+            }
+        })
 
         this.resetChains();
     }
