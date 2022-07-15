@@ -6,6 +6,7 @@ import BoardTile from "~/interfaces/game/BoardTile";
 import VectorPos from "~/interfaces/universal/VectorPos";
 import ActivePiece from "./ActivePiece";
 import Board from "./Board";
+import ChainAnalyzer from "./ChainAnalyzer";
 import Piece from "./Piece";
 
 // keeping track of the score, managing when the player has control and over what
@@ -20,12 +21,13 @@ export default class GameManager {
     movementInput: integer;
     rotateInput: integer;
 
-    chainId: integer = 0;
+    chainAnalyzer: ChainAnalyzer;
 
     constructor(pieceSheet: string) {
         this.pieceSheet = pieceSheet;
         this.gravityPieces = [];
         this.board = new Board(this, { x: 6, y: 12 });
+        this.chainAnalyzer = new ChainAnalyzer(this);
         this.movementInput = 0;
         this.rotateInput = 0;
     }
@@ -58,13 +60,11 @@ export default class GameManager {
                 this.gravityPieces.splice(i);
                 i--;
             }
-            
         }
 
         // When all pieces have stopped falling, check the board for chains
         if (this.gravityPieces.length == 0 && this.activePiece == undefined) {
-            this.identifyChains();
-            this.checkChains(scene);             
+            this.chainAnalyzer.update();    
             this.createNewPiece(scene);
         }
 
@@ -89,89 +89,6 @@ export default class GameManager {
 
             this.activePiece = undefined;
         }
-    }
-
-    // Identifies each piece with a chain
-    identifyChains() {
-        for (let y = 0; y < this.board.board.length; y++) {
-            for (let x = 0; x < this.board.board[y].length; x++) {
-                let vertex : BoardTile = this.board.board[y][x];
-                // If there is no piece, then it doesn't make sense to check that spot
-                if (vertex.piece == undefined) continue;
-                
-                console.log("checking chain at " + x + ", " + y + " id: " + vertex.chainId);
-
-                // If the chain id is not -1, then it has already been identified
-                if (vertex.chainId != -1) continue;
-
-                let puyoType = vertex.piece.type;
-                let chain = this.identifyPiece(x, y, puyoType, this.chainId);
-
-                this.chainId++;
-
-            }
-        }
-        this.board.printDebug();
-    }
-
-    // Checks the piece for a match
-    private identifyPiece(x: number, y: number, type: PieceType, chainId: number) : BoardTile[] | undefined {
-        // Check if the vertex is valid
-        if (x < 0 || y < 0 || x >= this.board.board[0].length || y >= this.board.board.length) return undefined;
-
-        let chain : BoardTile[] = [];
-
-        let vertex = this.board.board[y][x];
-        // Chains don't persist over gaps and aren't of different types
-        if (vertex.piece == undefined || vertex.piece.type != type || vertex.chainId == chainId) return undefined;
-
-        let puyoType = vertex.piece.type;
-        vertex.chainId = chainId;
-        chain.push(vertex);
-
-        let p1 = this.identifyPiece(x, y - 1, puyoType, vertex.chainId);
-        let p2 = this.identifyPiece(x - 1, y, puyoType, vertex.chainId);
-        let p3 = this.identifyPiece(x + 1, y, puyoType, vertex.chainId);
-        let p4 = this.identifyPiece(x, y + 1, puyoType, vertex.chainId);
-
-        if (p1 != undefined) chain = chain.concat(p1);
-        if (p2 != undefined) chain = chain.concat(p2);
-        if (p3 != undefined) chain = chain.concat(p3);
-        if (p4 != undefined) chain = chain.concat(p4);
-
-        return chain;
-    }
-
-    // Checks each chain for chains of sufficient length
-    // Queued up and removed and the same time
-    checkChains(scene: Phaser.Scene) : Map<number, VectorPos[]> {
-        let chains = new Map<number, VectorPos[]>();
-        for (let y = 0; y < this.board.board.length; y++) {
-            for (let x = 0; x < this.board.board[y].length; x++) {
-                // Skip entries that are from different chains
-                if (this.board.board[y][x].chainId == -1) continue;
-                // Chain starts here
-                let pos : VectorPos = { x: x, y: y };
-                if (!chains.has(this.board.board[y][x].chainId)) {
-                    chains.set(this.board.board[y][x].chainId, [pos]);
-                }
-                else {
-                    let chain = chains.get(this.board.board[y][x].chainId);
-                    if (chain != undefined) chain.push(pos);
-                    else {
-                        console.error("The chain is undefined, ignoring.");
-                    }
-                }
-            }
-        }
-
-        /*chains.forEach((value, key) => {
-            console.log("ChainID: " + key);
-            console.log(value);
-            console.log("---");
-        });*/
-
-        return chains;
     }
 
     // Test function
