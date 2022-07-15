@@ -3,6 +3,7 @@
 
 import { PieceType } from "~/enums/PieceType";
 import BoardTile from "~/interfaces/game/BoardTile";
+import VectorPos from "~/interfaces/universal/VectorPos";
 import ActivePiece from "./ActivePiece";
 import Board from "./Board";
 import Piece from "./Piece";
@@ -18,6 +19,8 @@ export default class GameManager {
     gameRun: boolean = true;
     movementInput: integer;
     rotateInput: integer;
+
+    chainId: integer = 0;
 
     constructor(pieceSheet: string) {
         this.pieceSheet = pieceSheet;
@@ -90,23 +93,21 @@ export default class GameManager {
 
     // Identifies each piece with a chain
     identifyChains() {
-        let chainId = 0;
-        let chains : BoardTile[][] = [];
         for (let y = 0; y < this.board.board.length; y++) {
             for (let x = 0; x < this.board.board[y].length; x++) {
                 let vertex : BoardTile = this.board.board[y][x];
+                // If there is no piece, then it doesn't make sense to check that spot
+                if (vertex.piece == undefined) continue;
+                
+                console.log("checking chain at " + x + ", " + y + " id: " + vertex.chainId);
 
                 // If the chain id is not -1, then it has already been identified
                 if (vertex.chainId != -1) continue;
-                // If there is no piece, then it doesn't make sense to check that spot
-                if (vertex.piece == undefined) continue;
 
                 let puyoType = vertex.piece.type;
-                let chain = this.identifyPiece(x, y, puyoType, chainId);
+                let chain = this.identifyPiece(x, y, puyoType, this.chainId);
 
-                if (chain != undefined) {
-                    chainId++;
-                }
+                this.chainId++;
 
             }
         }
@@ -121,6 +122,7 @@ export default class GameManager {
         let chain : BoardTile[] = [];
 
         let vertex = this.board.board[y][x];
+        // Chains don't persist over gaps and aren't of different types
         if (vertex.piece == undefined || vertex.piece.type != type || vertex.chainId == chainId) return undefined;
 
         let puyoType = vertex.piece.type;
@@ -142,8 +144,34 @@ export default class GameManager {
 
     // Checks each chain for chains of sufficient length
     // Queued up and removed and the same time
-    checkChains(scene: Phaser.Scene) {
+    checkChains(scene: Phaser.Scene) : Map<number, VectorPos[]> {
+        let chains = new Map<number, VectorPos[]>();
+        for (let y = 0; y < this.board.board.length; y++) {
+            for (let x = 0; x < this.board.board[y].length; x++) {
+                // Skip entries that are from different chains
+                if (this.board.board[y][x].chainId == -1) continue;
+                // Chain starts here
+                let pos : VectorPos = { x: x, y: y };
+                if (!chains.has(this.board.board[y][x].chainId)) {
+                    chains.set(this.board.board[y][x].chainId, [pos]);
+                }
+                else {
+                    let chain = chains.get(this.board.board[y][x].chainId);
+                    if (chain != undefined) chain.push(pos);
+                    else {
+                        console.error("The chain is undefined, ignoring.");
+                    }
+                }
+            }
+        }
 
+        /*chains.forEach((value, key) => {
+            console.log("ChainID: " + key);
+            console.log(value);
+            console.log("---");
+        });*/
+
+        return chains;
     }
 
     // Test function
