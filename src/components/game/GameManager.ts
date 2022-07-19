@@ -100,7 +100,7 @@ export default class GameManager {
     // Temporary function
     // To be replaced with the piece constructor class
     createNewPiece(scene: Phaser.Scene) {
-        let piece = new Piece(this.pieceSheet, 15);
+        let piece = new Piece(this.pieceSheet, 0);
         let piece2 = new Piece(this.pieceSheet, 16);
         this.activePiece = new ActivePiece(piece, piece2, this.board);
         this.activePiece.start(scene);

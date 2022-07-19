@@ -21,6 +21,13 @@ export default class Piece {
         this.texture = texture;
         this.frame = frame;
         if (type) this.type = type;
+        else {
+            if (frame <= 15) this.type = PieceType.Red;
+            else if (frame <= 30) this.type = PieceType.Green;
+            else if (frame <= 45) this.type = PieceType.Blue;
+            else if (frame <= 60) this.type = PieceType.Yellow;
+            else this.type = PieceType.Purple;
+        }
         if (position) {
             this.position = position;
         }
@@ -133,10 +140,8 @@ export default class Piece {
         if (right == this.type) sprite += 4;
         if (up == this.type) sprite += 1;
 
-        this.frame = sprite;
+        this.frame = sprite + 16 * this.type;
         this.sceneImage?.setFrame(this.frame);
-
-
     }
 
 }

@@ -79,7 +79,7 @@ export default class ChainAnalyzer {
         let validChains = new Map<number, VectorPos[]>();
 
         chains.forEach((value, key) => {
-            if (value.length >= this.manager.minLength + 12) {
+            if (value.length >= this.manager.minLength) {
                 validChains.set(key, value);
             }
         });
