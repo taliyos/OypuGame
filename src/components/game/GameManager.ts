@@ -64,8 +64,9 @@ export default class GameManager {
         }
 
         // When all pieces have stopped falling, check the board for chains
+        // After that, continue to the next piece
         if (this.gravityPieces.length == 0 && this.activePiece == undefined) {
-            this.chainAnalyzer.update();    
+            this.chainAnalyzer.update();
             this.createNewPiece(scene);
         }
 
@@ -75,7 +76,11 @@ export default class GameManager {
             if (this.activePiece == undefined 
                 || this.activePiece.bottomPiece.boardPos == undefined
                 || this.activePiece.topPiece.boardPos == undefined) return;
+
             // Check the active piece for an overhang
+            // Both the top and bottom pieces are checked independently
+            // If there is no collision below the piece, then that piece is
+            // removmed from the collision map and added to the gravity list
             if (!this.board.checkPieceDownCollision(this.activePiece?.bottomPiece.boardPos)) {
                 this.activePiece.bottomPiece.removeFromBoard();
                 this.gravityPieces.push(this.activePiece.bottomPiece);
@@ -92,7 +97,8 @@ export default class GameManager {
         }
     }
 
-    // Test function
+    // Temporary function
+    // To be replaced with the piece constructor class
     createNewPiece(scene: Phaser.Scene) {
         let piece = new Piece(this.pieceSheet, 15);
         let piece2 = new Piece(this.pieceSheet, 16);

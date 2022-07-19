@@ -11,13 +11,10 @@ export default class ChainAnalyzer {
         this.manager = manager;
     }
 
-    // Analyzes the board for chains and destroys chains that are large enough
+    // Analyzes the board for chains, destroying chains that are large enough
     update() {
         const chains : Map<number, VectorPos[]> = this.identifyChains();
         const validChains : Map<number, VectorPos[]> = this.getValidChains(chains);
-
-        console.log("VALID CHAINS");
-        console.log(validChains);
 
         this.destroyChains(validChains);
     }
@@ -47,6 +44,7 @@ export default class ChainAnalyzer {
         return identifiedChains;
     }
 
+    // Recursively checks adjacent pieces to construct a chain
     private identifyPiece(x: number, y: number, type: PieceType, chainId: number) : VectorPos[] | undefined {
         // Check if the vertex is valid
         if (x < 0 || y < 0 || x >= this.manager.board.board[0].length || y >= this.manager.board.board.length) return undefined;
@@ -88,14 +86,17 @@ export default class ChainAnalyzer {
     }
 
     // Destroys all chains that are specified
+    // Does so by looping through each value and removing all references to the piece
     private destroyChains(chains : Map<number, VectorPos[]>) {
         if (chains.size == 0) return;
 
         chains.forEach((value, key) => {
             for (let i = 0; i < value.length; i++) {
-                console.log(this.manager.board.board[value[i].y][value[i].x]);
+                // Remove piece render from screen
+                this.manager.board.board[value[i].y][value[i].x].piece?.sceneImage?.destroy();
+                // Remove piece reference in board (ie. the collision map)
                 this.manager.board.board[value[i].y][value[i].x].piece?.removeFromBoard();
-                this.manager.board.board[value[i].y][value[i].x].piece = undefined;
+                // Reset board position chain id
                 this.manager.board.board[value[i].y][value[i].x].chainId = -1;
             }
         })
