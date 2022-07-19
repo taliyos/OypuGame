@@ -12,6 +12,7 @@ export default class ChainAnalyzer {
     }
 
     // Analyzes the board for chains, destroying chains that are large enough
+    // Pieces are updated to match their position in the chain
     update() {
         const chains : Map<number, VectorPos[]> = this.identifyChains();
         const validChains : Map<number, VectorPos[]> = this.getValidChains(chains);
@@ -28,6 +29,8 @@ export default class ChainAnalyzer {
                 let vertex : BoardTile = this.manager.board.board[y][x];
                 // If there is no piece, then it doesn't make sense to check that spot
                 if (vertex.piece == undefined) continue;
+                
+                vertex.piece.updateSprite();
 
                 // If the chain id is not -1, then it has already been identified
                 if (vertex.chainId != -1) continue;
@@ -40,7 +43,6 @@ export default class ChainAnalyzer {
 
             }
         }
-        this.manager.board.printDebug();
         return identifiedChains;
     }
 
@@ -77,7 +79,7 @@ export default class ChainAnalyzer {
         let validChains = new Map<number, VectorPos[]>();
 
         chains.forEach((value, key) => {
-            if (value.length >= this.manager.minLength) {
+            if (value.length >= this.manager.minLength + 12) {
                 validChains.set(key, value);
             }
         });

@@ -132,6 +132,13 @@ export default class Board {
     removePieceFromBoard(pos: VectorPos) {
         this.board[this.boardToAbsoluteY(pos.y)][pos.x].piece = undefined;
     }
+    
+    getPiece(pos: VectorPos) : Piece | undefined {
+        if (pos.x < 0 || pos.x >= this.x) return undefined;
+        let yPos = this.boardToAbsoluteY(pos.y);
+        if (yPos < 0 || yPos >= this.absoluteY) return undefined;
+        return this.board[yPos][pos.x].piece;
+    }
 
     // HELPERS
 

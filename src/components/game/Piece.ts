@@ -3,6 +3,7 @@ import VectorPos from "~/interfaces/universal/VectorPos";
 import Board from "./Board";
 import { PieceScale } from "../../constants/GameOptions";
 import { PieceType } from "../../enums/PieceType";
+import BoardTile from "~/interfaces/game/BoardTile";
 
 // A single piece
 // This is not connected to anything else and operates individually
@@ -113,4 +114,29 @@ export default class Piece {
     updatePosition() {
         this.sceneImage?.setPosition(this.position.x, this.position.y);
     }
+
+    // GRAPHICS
+
+    // Updates the sprite to "sync" with nearby pieces in the same chain
+    updateSprite() {
+        if (this.linkedBoard == undefined || this.boardPos == undefined) return;
+
+        // Get the adjacent tiles
+        let down : integer | undefined = this.linkedBoard.getPiece({ x: this.boardPos.x, y: this.boardPos.y - 1 })?.type;
+        let left : integer | undefined = this.linkedBoard.getPiece({ x: this.boardPos.x - 1, y: this.boardPos.y })?.type;
+        let right : integer | undefined  = this.linkedBoard.getPiece({ x: this.boardPos.x + 1, y: this.boardPos.y })?.type;
+        let up : integer | undefined = this.linkedBoard.getPiece({ x: this.boardPos.x, y: this.boardPos.y + 1 })?.type;
+    
+        let sprite = 0;
+        if (down == this.type) sprite += 2;
+        if (left == this.type) sprite += 8;
+        if (right == this.type) sprite += 4;
+        if (up == this.type) sprite += 1;
+
+        this.frame = sprite;
+        this.sceneImage?.setFrame(this.frame);
+
+
+    }
+
 }
