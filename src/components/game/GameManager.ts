@@ -54,6 +54,15 @@ export default class GameManager {
     update(delta: number, scene: Phaser.Scene) {
         if (!this.gameRun) return;
 
+        // When all pieces have stopped falling, check the board for chains
+        // After that, continue to the next piece
+        if (this.gravityPieces.length == 0 && this.activePiece == undefined) {
+            console.log("chain check");
+            this.chainAnalyzer.update();
+            // Check for hanging pieces
+            if (!this.handleHangingPieces()) this.createNewPiece(scene);
+        }
+
         // Update each falling piece
         // If the piece is no longer falling, remove it from the gravity pieces array
         for (let i = 0; i < this.gravityPieces.length; i++) {
@@ -61,13 +70,6 @@ export default class GameManager {
                 this.gravityPieces.splice(i);
                 i--;
             }
-        }
-
-        // When all pieces have stopped falling, check the board for chains
-        // After that, continue to the next piece
-        if (this.gravityPieces.length == 0 && this.activePiece == undefined) {
-            this.chainAnalyzer.update();
-            this.createNewPiece(scene);
         }
 
         // Update the active piece
@@ -139,5 +141,38 @@ export default class GameManager {
 
     rotRight() {
         this.rotateInput = 1;
+    }
+
+    // Checks to see if there are pieces floating in the air
+    // If there are, those pieces are added to the gravity array
+    // Returns true when there is at least one hanging piece
+    // False otherwise
+    private handleHangingPieces() : boolean {
+        // Array of integers to indicate empty columns
+        // If the loop runs into one of these columns, it should be skipped
+        let emptyColumns : integer[] = [];
+        let hangingPiece : boolean = false;
+        for (let y = this.board.absoluteY - 1; y >= 0; y--) {
+            for (let x = 0; x < this.board.x; x++) {
+                if (emptyColumns.includes(x)) continue;
+                let piece = this.board.board[y][x].piece;
+                if (piece == undefined) {
+                    //console.log(piece);
+                    emptyColumns.push(x);
+                    //console.log("col: " + x + ", " + y + " is undefined");
+                    for (let subY = y - 1; subY >= 0; subY--) {
+                        let subPiece = this.board.board[subY][x].piece;
+                        if (subPiece == undefined) continue;
+                        //console.log(x + ", " + subY + " added overhang to gravity");
+                        //console.log(subPiece);
+                        subPiece.startGravity();
+                        this.gravityPieces.push(subPiece);
+                        subPiece.removeFromBoard();
+                        hangingPiece = true;
+                    }
+                }
+            }
+        }
+        return hangingPiece;
     }
 }
