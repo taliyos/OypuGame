@@ -62,12 +62,11 @@ export default class GameManager {
             // Check for hanging pieces
             if (!this.handleHangingPieces()) this.createNewPiece(scene);
         }
-
         // Update each falling piece
         // If the piece is no longer falling, remove it from the gravity pieces array
         for (let i = 0; i < this.gravityPieces.length; i++) {
             if (this.gravityPieces[i].update(delta)) {
-                this.gravityPieces.splice(i);
+                this.gravityPieces.splice(i, 1);
                 i--;
             }
         }
