@@ -5,6 +5,13 @@ import { PieceScale } from "../../constants/GameOptions";
 import { PieceType } from "../../enums/PieceType";
 import BoardTile from "~/interfaces/game/BoardTile";
 
+type NeighborPieces = {
+    down : Piece | undefined;
+    left : Piece | undefined;
+    right : Piece | undefined;
+    up : Piece | undefined;
+}
+
 // A single piece
 // This is not connected to anything else and operates individually
 export default class Piece {
@@ -59,6 +66,9 @@ export default class Piece {
         // "Snap" position to boardPos
         this.position = this.linkedBoard.boardToWorldSpace(this.boardPos);
         this.updatePosition();
+
+        // Update the sprite
+        this.updateSpriteAndNeighbors();
     }
 
     // Attempts to remove the piece from the board
@@ -125,23 +135,49 @@ export default class Piece {
     // GRAPHICS
 
     // Updates the sprite to "sync" with nearby pieces in the same chain
-    updateSprite() {
+    // Returns the adjacent neighbors
+    updateSprite() : NeighborPieces {
         if (this.linkedBoard == undefined || this.boardPos == undefined) return;
 
         // Get the adjacent tiles
-        let down : integer | undefined = this.linkedBoard.getPiece({ x: this.boardPos.x, y: this.boardPos.y - 1 })?.type;
-        let left : integer | undefined = this.linkedBoard.getPiece({ x: this.boardPos.x - 1, y: this.boardPos.y })?.type;
-        let right : integer | undefined  = this.linkedBoard.getPiece({ x: this.boardPos.x + 1, y: this.boardPos.y })?.type;
-        let up : integer | undefined = this.linkedBoard.getPiece({ x: this.boardPos.x, y: this.boardPos.y + 1 })?.type;
+        let neighbors = this.getConnectedNeighbors();
     
         let sprite = 0;
-        if (down == this.type) sprite += 2;
-        if (left == this.type) sprite += 8;
-        if (right == this.type) sprite += 4;
-        if (up == this.type) sprite += 1;
+        if (neighbors.down != undefined && neighbors.down.type == this.type) sprite += 2;
+        if (neighbors.left != undefined && neighbors.left.type == this.type) sprite += 8;
+        if (neighbors.right != undefined && neighbors.right.type == this.type) sprite += 4;
+        if (neighbors.up != undefined && neighbors.up.type == this.type) sprite += 1;
 
         this.frame = sprite + 16 * this.type;
         this.sceneImage?.setFrame(this.frame);
+
+        return neighbors;
+    }
+
+    // Performs the general update to "sync" with nearby pieces in the same chain
+    // and forces the directly connected pieces to update as well
+    private updateSpriteAndNeighbors() {
+        let neighbors = this.updateSprite();
+
+        if (neighbors.down != undefined) neighbors.down.updateSprite();
+        if (neighbors.left != undefined) neighbors.left.updateSprite();
+        if (neighbors.right != undefined) neighbors.right.updateSprite();
+        if (neighbors.up != undefined) neighbors.up.updateSprite();
+    }
+
+    // Returns NeighborPieces
+    // If one of the directions is not corrected, the corresponding element
+    // is undefined
+    private getConnectedNeighbors() : NeighborPieces {
+        let connectedPieces : NeighborPieces = { down: undefined, left: undefined, right: undefined, up: undefined };
+        if (this.linkedBoard == undefined || this.boardPos == undefined) return connectedPieces;
+
+        connectedPieces.down = this.linkedBoard.getPiece({ x: this.boardPos.x, y: this.boardPos.y - 1 });
+        connectedPieces.left = this.linkedBoard.getPiece({ x: this.boardPos.x - 1, y: this.boardPos.y });
+        connectedPieces.right  = this.linkedBoard.getPiece({ x: this.boardPos.x + 1, y: this.boardPos.y });
+        connectedPieces.up = this.linkedBoard.getPiece({ x: this.boardPos.x, y: this.boardPos.y + 1 });
+    
+        return connectedPieces;
     }
 
 }
