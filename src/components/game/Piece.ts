@@ -137,10 +137,9 @@ export default class Piece {
     // Updates the sprite to "sync" with nearby pieces in the same chain
     // Returns the adjacent neighbors
     updateSprite() : NeighborPieces {
-        if (this.linkedBoard == undefined || this.boardPos == undefined) return;
-
         // Get the adjacent tiles
         let neighbors = this.getConnectedNeighbors();
+        if (this.linkedBoard == undefined || this.boardPos == undefined) return neighbors;
     
         let sprite = 0;
         if (neighbors.down != undefined && neighbors.down.type == this.type) sprite += 2;

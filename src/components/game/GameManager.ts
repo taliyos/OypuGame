@@ -8,10 +8,10 @@ import ActivePiece from "./ActivePiece";
 import Board from "./Board";
 import ChainAnalyzer from "./ChainAnalyzer";
 import Piece from "./Piece";
+import PieceConstructor from "./PieceConstructor";
 
 // keeping track of the score, managing when the player has control and over what
 export default class GameManager {
-    pieceSheet: string;
     board: Board;
 
     gravityPieces: Piece[];
@@ -24,11 +24,13 @@ export default class GameManager {
     chainAnalyzer: ChainAnalyzer;
     minLength: number = 4;
 
+    pieceConstructor : PieceConstructor;
+
     constructor(pieceSheet: string) {
-        this.pieceSheet = pieceSheet;
         this.gravityPieces = [];
         this.board = new Board(this, { x: 6, y: 12 });
         this.chainAnalyzer = new ChainAnalyzer(this);
+        this.pieceConstructor = new PieceConstructor(this.board, pieceSheet);
         this.movementInput = 0;
         this.rotateInput = 0;
     }
@@ -45,10 +47,7 @@ export default class GameManager {
     test(scene: Phaser.Scene) {
         this.board.drawDebug(scene);
 
-        let piece = new Piece(this.pieceSheet, 15);
-        let piece2 = new Piece(this.pieceSheet, 16);
-        this.activePiece = new ActivePiece(piece, piece2, this.board);
-        this.activePiece.start(scene);
+        this.createNewPiece(scene);
     }
 
     update(delta: number, scene: Phaser.Scene) {
@@ -101,9 +100,7 @@ export default class GameManager {
     // Temporary function
     // To be replaced with the piece constructor class
     createNewPiece(scene: Phaser.Scene) {
-        let piece = new Piece(this.pieceSheet, 0);
-        let piece2 = new Piece(this.pieceSheet, 16);
-        this.activePiece = new ActivePiece(piece, piece2, this.board);
+        this.activePiece = this.pieceConstructor.createActivePiece();
         this.activePiece.start(scene);
     }
 
