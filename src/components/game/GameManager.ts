@@ -1,15 +1,14 @@
-// Handles the game and it's logic
-// Responsible for creating pieces, checking for piece connections,
-
-import { PieceType } from "~/enums/PieceType";
-import BoardTile from "~/interfaces/game/BoardTile";
+import { GapSize } from "../../constants/GameOptions";
 import VectorPos from "~/interfaces/universal/VectorPos";
+import PiecePreview from "../UI/PiecePreview";
 import ActivePiece from "./ActivePiece";
 import Board from "./Board";
 import ChainAnalyzer from "./ChainAnalyzer";
 import Piece from "./Piece";
 import PieceConstructor from "./PieceConstructor";
 
+// Handles the game and it's logic
+// Responsible for creating pieces, checking for piece connections,
 // keeping track of the score, managing when the player has control and over what
 export default class GameManager {
     board: Board;
@@ -25,12 +24,14 @@ export default class GameManager {
     minLength: number = 4;
 
     pieceConstructor : PieceConstructor;
+    piecePreview : PiecePreview;
 
     constructor(pieceSheet: string) {
         this.gravityPieces = [];
         this.board = new Board(this, { x: 6, y: 12 });
         this.chainAnalyzer = new ChainAnalyzer(this);
         this.pieceConstructor = new PieceConstructor(this.board, pieceSheet);
+        this.piecePreview = new PiecePreview("bg");
         this.movementInput = 0;
         this.rotateInput = 0;
     }
@@ -41,13 +42,20 @@ export default class GameManager {
         // Create the board and center it
         this.board.createBoard();
         this.board.setBoardPos({ x: scene.scale.width / 2, y: scene.scale.height / 2 });
+        
+        let previewPos : VectorPos = {
+            x: this.board.boardPos.x + (this.board.x + 1) * GapSize.x,
+            y: this.board.boardPos.y + 1 * GapSize.y
+        }
+        this.piecePreview.setPosition(previewPos);
+        this.piecePreview.add(scene);
     }
 
     // Creates a random piece to display on the screen
     test(scene: Phaser.Scene) {
         this.board.drawDebug(scene);
 
-        this.createNewPiece(scene);
+        this.nextPiece(scene);
     }
 
     update(delta: number, scene: Phaser.Scene) {
@@ -59,7 +67,7 @@ export default class GameManager {
             console.log("chain check");
             this.chainAnalyzer.update();
             // Check for hanging pieces
-            if (!this.handleHangingPieces()) this.createNewPiece(scene);
+            if (!this.handleHangingPieces()) this.nextPiece(scene);
         }
         // Update each falling piece
         // If the piece is no longer falling, remove it from the gravity pieces array
@@ -97,10 +105,12 @@ export default class GameManager {
         }
     }
 
-    // Temporary function
-    // To be replaced with the piece constructor class
-    createNewPiece(scene: Phaser.Scene) {
-        this.activePiece = this.pieceConstructor.createActivePiece();
+    // Uses the next piece, assigning to the currently active piece
+    // and updates the PiecePreview to match
+    nextPiece(scene: Phaser.Scene) {
+        this.activePiece = this.pieceConstructor.useNextPiece();
+        // this.piecePreview.update(this.pieceConstructor.getNextPiece(), this.pieceConstructor.getFuturePiece());
+    
         this.activePiece.start(scene);
     }
 

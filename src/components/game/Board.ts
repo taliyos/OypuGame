@@ -1,7 +1,7 @@
 import BoardTile from "~/interfaces/game/BoardTile";
 import VectorPos from "~/interfaces/universal/VectorPos";
 
-import { GapSize, TileSize } from "../../constants/GameOptions";
+import { GapSize, TileSize } from "../../constants/GameOptions";;
 import GameManager from "./GameManager";
 import Piece from "./Piece";
 
