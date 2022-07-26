@@ -73,6 +73,12 @@ export default class ActivePiece {
     rotate(dir: number) {
         if (dir == 0) return;
         this.rotation += dir;
+
+        if (this.bufferCounter != 0) {
+            this.topPiece.gravity = true;
+            this.bottomPiece.gravity = true;
+        }
+
         if (this.rotation > 3 ) this.rotation = 0;
         else if (this.rotation < 0) this.rotation = 3;
         // [T] 

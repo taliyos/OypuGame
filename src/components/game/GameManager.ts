@@ -80,7 +80,7 @@ export default class GameManager {
             // Check the active piece for an overhang
             // Both the top and bottom pieces are checked independently
             // If there is no collision below the piece, then that piece is
-            // removmed from the collision map and added to the gravity list
+            // removed from the collision map and added to the gravity list
             if (!this.board.checkPieceDownCollision(this.activePiece?.bottomPiece.boardPos)) {
                 this.activePiece.bottomPiece.removeFromBoard();
                 this.gravityPieces.push(this.activePiece.bottomPiece);
