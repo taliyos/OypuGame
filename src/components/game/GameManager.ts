@@ -109,6 +109,7 @@ export default class GameManager {
     // and updates the PiecePreview to match
     nextPiece(scene: Phaser.Scene) {
         this.activePiece = this.pieceConstructor.useNextPiece();
+        this.piecePreview.update(scene, this.pieceConstructor.getNextPiece(), this.pieceConstructor.getFuturePiece())
         // this.piecePreview.update(this.pieceConstructor.getNextPiece(), this.pieceConstructor.getFuturePiece());
     
         this.activePiece.start(scene);

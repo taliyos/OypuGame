@@ -1,6 +1,7 @@
 import Piece from "./Piece";
 import Board from "./Board";
 import { GapSize, BufferTime } from "../../constants/GameOptions";
+import VectorPos from "~/interfaces/universal/VectorPos";
 
 // Holds two active pieces
 export default class ActivePiece {
@@ -137,14 +138,22 @@ export default class ActivePiece {
 
     // Adds the pieces to the screen
     start(scene: Phaser.Scene) {
-        this.bottomPiece.add(this.linkedBoard.startCoord, this.linkedBoard, scene);
-        this.topPiece.add({
-            x: this.linkedBoard.startCoord.x,
-            y: this.linkedBoard.startCoord.y - 1
-        }, this.linkedBoard, scene);
+        this.addToScene(scene, this.linkedBoard.startCoord);
 
         this.bottomPiece.startGravity();
         this.topPiece.startGravity();
+    }
+
+    addToScene(scene : Phaser.Scene, coord: VectorPos) : Phaser.GameObjects.Image[] {
+        let pieces = [];
+        
+        pieces.push(this.bottomPiece.add(coord, this.linkedBoard, scene));
+        pieces.push(this.topPiece.add({
+            x: coord.x,
+            y: coord.y - 1
+        }, this.linkedBoard, scene));
+
+        return pieces;
     }
 
     // Updates both pieces, performing additional checks for collision
