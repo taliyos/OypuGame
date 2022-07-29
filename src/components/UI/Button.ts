@@ -52,7 +52,7 @@ export default class Button implements PhaserObject {
     }
 
     // Adds the button to the Phaser Game
-    add(position: VectorPos, scene: Phaser.Scene) {
+    add(position: VectorPos, scene: Phaser.Scene): void {
         // Add the text to the scene
         if (this.text != undefined) {
             this.sceneText = this.text.add(this.position, scene);

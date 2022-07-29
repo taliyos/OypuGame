@@ -3,7 +3,6 @@ import Phaser from "phaser";
 import PhaserObject from "~/interfaces/PhaserObject";
 import VectorPos from "~/interfaces/universal/VectorPos";
 import BasicUISprite from "~/interfaces/UI/Sprite/BasicUISprite";
-import InteractiveUISprite from "~/interfaces/UI/Sprite/InteractiveUISprite";
 
 export default class UISprite implements BasicUISprite, PhaserObject {
     texture: string;
