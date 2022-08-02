@@ -14,6 +14,8 @@ export default class UIText implements Text, PhaserObject {
     hoverStyle: Phaser.Types.GameObjects.Text.TextStyle;
     clickedStyle: Phaser.Types.GameObjects.Text.TextStyle;
 
+    sceneText : Phaser.GameObjects.Text | undefined;
+
     constructor(properties: Text) {
         this.text = properties.text;
         if (properties.offset != null)
@@ -27,6 +29,16 @@ export default class UIText implements Text, PhaserObject {
     
     // Add the text to the screen
     add(position: VectorPos, scene: Phaser.Scene) {
-        return (scene.add.text(position.x + this.offset.x, position.y + this.offset.y, this.text, this.normalStyle)).setOrigin(this.origin.x, this.origin.y);
+        this.sceneText = (scene.add.text(position.x + this.offset.x, position.y + this.offset.y, this.text, this.normalStyle)).setOrigin(this.origin.x, this.origin.y);
+        return this.sceneText;
+    }
+
+    // Updates the text
+    // If the UI Text hasn't been added to the scene then
+    // it does not attempt to update the sceneText
+    updateText(text: string) {
+        this.text = text;
+        if (this.sceneText == undefined) return;
+        this.sceneText.text = text;
     }
 }

@@ -1,7 +1,6 @@
 import { GapSize, PieceScale, TileSize } from "../../constants/GameOptions";
 import VectorPos from "~/interfaces/universal/VectorPos";
 import ActivePiece from "../game/ActivePiece";
-import Piece from "../game/Piece";
 import UISprite from "./UISprite";
 
 export default class PiecePreview {
