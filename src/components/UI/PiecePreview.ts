@@ -51,8 +51,8 @@ export default class PiecePreview {
     private addPreview(scene: Phaser.Scene, activePiece: ActivePiece, position: VectorPos) : Phaser.GameObjects.Image[] {
         let images : Phaser.GameObjects.Image[] = [];
 
-        images.push(scene.add.image(position.x, position.y, activePiece.topPiece.texture, activePiece.topPiece.frame).setScale(this.previewScale));
-        images.push(scene.add.image(position.x, position.y - ((0.28*TileSize.y)/PieceScale.y), activePiece.bottomPiece.texture, activePiece.bottomPiece.frame).setScale(this.previewScale));
+        images.push(scene.add.image(position.x, position.y - ((0.28*TileSize.y)/PieceScale.y), activePiece.topPiece.texture, activePiece.topPiece.frame).setScale(this.previewScale));
+        images.push(scene.add.image(position.x, position.y, activePiece.bottomPiece.texture, activePiece.bottomPiece.frame).setScale(this.previewScale));
 
         return images;
     }
