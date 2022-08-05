@@ -6,6 +6,9 @@ import Board from "./Board";
 import ChainAnalyzer from "./ChainAnalyzer";
 import Piece from "./Piece";
 import PieceConstructor from "./PieceConstructor";
+import ScoreDisplay from "../UI/ScoreDisplay";
+import { normalTextStyle } from "../../constants/StartMenuUI";
+import { getLayerPower, getTypePower } from "../../constants/ScoreTables";
 
 // Handles the game and it's logic
 // Responsible for creating pieces, checking for piece connections,
@@ -26,12 +29,16 @@ export default class GameManager {
     pieceConstructor : PieceConstructor;
     piecePreview : PiecePreview;
 
+    scoreDisplay: ScoreDisplay;
+    score: number = 0;
+
     constructor(pieceSheet: string) {
         this.gravityPieces = [];
         this.board = new Board(this, { x: 6, y: 12 });
         this.chainAnalyzer = new ChainAnalyzer(this);
         this.pieceConstructor = new PieceConstructor(this.board, pieceSheet);
         this.piecePreview = new PiecePreview("bg");
+        this.scoreDisplay = new ScoreDisplay(this.board, normalTextStyle);
         this.movementInput = 0;
         this.rotateInput = 0;
     }
@@ -49,6 +56,7 @@ export default class GameManager {
         }
         this.piecePreview.setPosition(previewPos);
         this.piecePreview.add(scene);
+        this.scoreDisplay.add(scene);
     }
 
     // Creates a random piece to display on the screen
@@ -64,8 +72,8 @@ export default class GameManager {
         // When all pieces have stopped falling, check the board for chains
         // After that, continue to the next piece
         if (this.gravityPieces.length == 0 && this.activePiece == undefined) {
-            console.log("chain check");
-            this.chainAnalyzer.update();
+            let stats = this.chainAnalyzer.update();
+            if (stats.totalChains != 0) this.updateScore(stats);
             // Check for hanging pieces
             if (!this.handleHangingPieces()) this.nextPiece(scene);
         }
@@ -148,6 +156,11 @@ export default class GameManager {
 
     rotRight() {
         this.rotateInput = 1;
+    }
+
+    private updateScore(stats : any) {
+        this.score += (10 * stats.piecesCleared) * (getLayerPower(stats.piecesCleared) + getTypePower(stats.uniqueTypes));
+        this.scoreDisplay.update(this.score);
     }
 
     // Checks to see if there are pieces floating in the air

@@ -14,15 +14,31 @@ export default class ChainAnalyzer {
     // Analyzes the board for chains, destroying chains that are large enough
     // Pieces are updated to match their position in the chain
     update() {
-        const chains : Map<number, VectorPos[]> = this.identifyChains();
-        const validChains : Map<number, VectorPos[]> = this.getValidChains(chains);
+        const chains : Map<number, { chain: VectorPos[], type: number }> = this.identifyChains();
+        const validChains : Map<number, {chain: VectorPos[], type: number }> = this.getValidChains(chains);
+
+        let piecesCleared = 0;
+        let uniqueTypes = new Set<Number>();
+        chains.forEach((value) => {
+            piecesCleared += value.chain.length;
+            uniqueTypes.add(value.type);
+        });
+
+
+        let stats = {
+            totalChains: validChains.size,
+            piecesCleared: piecesCleared,
+            types: uniqueTypes.size,
+        }
 
         this.destroyChains(validChains);
+
+        return stats;
     }
 
     // Identifies and assigns each chain with a unique chainId
-    private identifyChains() : Map<number, VectorPos[]> {
-        let identifiedChains = new Map<number, VectorPos[]>();
+    private identifyChains() : Map<number, {chain: VectorPos[], type: number}> {
+        let identifiedChains = new Map<number, {chain: VectorPos[], type: number }>();
 
         for (let y = 0; y < this.manager.board.board.length; y++) {
             for (let x = 0; x < this.manager.board.board[y].length; x++) {
@@ -37,7 +53,7 @@ export default class ChainAnalyzer {
 
                 let puyoType = vertex.piece.type;
                 let chain = this.identifyPiece(x, y, puyoType, this.chainId);
-                if (chain != undefined) identifiedChains.set(this.chainId, chain);
+                if (chain != undefined) identifiedChains.set(this.chainId, {chain: chain, type: puyoType });
 
                 this.chainId++;
 
@@ -75,12 +91,12 @@ export default class ChainAnalyzer {
     }
 
     // Returns the map of chains with length greater than or equal than the required
-    private getValidChains(chains : Map<number, VectorPos[]>) : Map<number, VectorPos[]> {
-        let validChains = new Map<number, VectorPos[]>();
+    private getValidChains(chains : Map<number, {chain: VectorPos[], type: number }>) : Map<number, { chain: VectorPos[], type: number }> {
+        let validChains = new Map<number, { chain: VectorPos[], type: number }>();
 
         chains.forEach((value, key) => {
-            if (value.length >= this.manager.minLength) {
-                validChains.set(key, value);
+            if (value.chain.length >= this.manager.minLength) {
+                validChains.set(key, { chain: value.chain, type: value.type } );
             }
         });
 
@@ -89,17 +105,17 @@ export default class ChainAnalyzer {
 
     // Destroys all chains that are specified
     // Does so by looping through each value and removing all references to the piece
-    private destroyChains(chains : Map<number, VectorPos[]>) {
+    private destroyChains(chains : Map<number, {chain: VectorPos[], type: number}>) {
         if (chains.size == 0) return;
 
         chains.forEach((value, key) => {
-            for (let i = 0; i < value.length; i++) {
+            for (let i = 0; i < value.chain.length; i++) {
                 // Remove piece render from screen
-                this.manager.board.board[value[i].y][value[i].x].piece?.sceneImage?.destroy();
+                this.manager.board.board[value.chain[i].y][value.chain[i].x].piece?.sceneImage?.destroy();
                 // Remove piece reference in board (ie. the collision map)
-                this.manager.board.board[value[i].y][value[i].x].piece?.removeFromBoard();
+                this.manager.board.board[value.chain[i].y][value.chain[i].x].piece?.removeFromBoard();
                 // Reset board position chain id
-                this.manager.board.board[value[i].y][value[i].x].chainId = -1;
+                this.manager.board.board[value.chain[i].y][value.chain[i].x].chainId = -1;
             }
         })
 
