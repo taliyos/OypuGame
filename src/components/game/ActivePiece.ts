@@ -18,6 +18,7 @@ export default class ActivePiece {
         this.topPiece = topPiece;
 
         this.linkedBoard = linkedBoard;
+        this.calculateSprites();
     }
 
     
@@ -134,6 +135,7 @@ export default class ActivePiece {
         }
 
         this.topPiece.updatePosition();
+        this.calculateSprites();
     }
 
     // Adds the pieces to the screen
@@ -182,6 +184,37 @@ export default class ActivePiece {
         this.rotate(rotDir);
 
         return true;
+    }
+
+    // Determines which sprite to show so that pieces that are supposed
+    // to be connected are connected in the preview and while falling
+    private calculateSprites() {
+        let topSprite = 0;
+        let bottomSprite = 0;
+        if (this.topPiece.type == this.bottomPiece.type) {
+            if (this.rotation == 0) {
+                topSprite = 1;
+                bottomSprite = 2;
+            }
+            else if (this.rotation == 1) {
+                topSprite = 8;
+                bottomSprite = 4;
+            }
+            else if (this.rotation == 2) {
+                topSprite = 2;
+                bottomSprite = 1;
+            }
+            else if (this.rotation == 3) {
+                topSprite = 4;
+                bottomSprite = 8;
+            }
+        }
+
+        this.topPiece.frame = topSprite + 16 * this.topPiece.type;
+        this.bottomPiece.frame = bottomSprite + 16 * this.bottomPiece.type;
+
+        this.topPiece.sceneImage?.setFrame(this.topPiece.frame);
+        this.bottomPiece.sceneImage?.setFrame(this.bottomPiece.frame);
     }
 
 }
