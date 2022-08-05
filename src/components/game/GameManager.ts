@@ -8,6 +8,7 @@ import Piece from "./Piece";
 import PieceConstructor from "./PieceConstructor";
 import ScoreDisplay from "../UI/ScoreDisplay";
 import { normalTextStyle } from "../../constants/StartMenuUI";
+import { getLayerPower, getTypePower } from "../../constants/ScoreTables";
 
 // Handles the game and it's logic
 // Responsible for creating pieces, checking for piece connections,
@@ -71,7 +72,8 @@ export default class GameManager {
         // When all pieces have stopped falling, check the board for chains
         // After that, continue to the next piece
         if (this.gravityPieces.length == 0 && this.activePiece == undefined) {
-            this.chainAnalyzer.update();
+            let stats = this.chainAnalyzer.update();
+            if (stats.totalChains != 0) this.updateScore(stats);
             // Check for hanging pieces
             if (!this.handleHangingPieces()) this.nextPiece(scene);
         }
@@ -154,6 +156,11 @@ export default class GameManager {
 
     rotRight() {
         this.rotateInput = 1;
+    }
+
+    private updateScore(stats : any) {
+        this.score += (10 * stats.piecesCleared) * (getLayerPower(stats.piecesCleared) + getTypePower(stats.uniqueTypes));
+        this.scoreDisplay.update(this.score);
     }
 
     // Checks to see if there are pieces floating in the air
