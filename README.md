@@ -16,19 +16,19 @@ A while back, I made a version of PuyoPuyo that you can still play. It's not per
 [View on Google Docs](https://docs.google.com/document/d/1eXm5zfqGpvBiPyBLLVvg5sBEhloP5CbykJFItqMcX3c/edit?usp=sharing)
 
 ## Features
- - [ ] Offline Gameplay 
-   - [ ] Piece Rotation
-   - [ ] Piece Detection
-     - [ ] Chain Removal
-     - [ ] Sprite Swaps
-   - [ ] Piece Gravity
-   - [ ] Next Piece Preview
-   - [ ] Scoring
-     - [ ] Combo Detection
-     - [ ] Score Display
+ - [ X ] Offline Gameplay 
+   - [ X ] Piece Rotation
+   - [ X ] Piece Detection
+     - [ X ] Chain Removal
+     - [ X ] Sprite Swaps
+   - [ X ] Piece Gravity
+   - [ X ] Next Piece Preview
+   - [ X ] Scoring
+     - [ X ] Combo Detection
+     - [ X ] Score Display
      - [ ] Score Gained Display
- - [ ] Custom Piece Sprites
-   - [ ] Piece Sprite Animations
+ - [ X ] Custom Piece Sprites
+   - [ X ] Piece Sprite Animations
  - [ ] Board Sprite
  - [ ] Online "versus" Gameplay
    - [ ] Server Multiplayer
