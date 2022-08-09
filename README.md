@@ -16,7 +16,7 @@ A while back, I made a version of PuyoPuyo that you can still play. It's not per
 [View on Google Docs](https://docs.google.com/document/d/1eXm5zfqGpvBiPyBLLVvg5sBEhloP5CbykJFItqMcX3c/edit?usp=sharing)
 
 ## Features
- - [X] Offline Gameplay 
+ - [ ] Offline Gameplay 
    - [X] Piece Rotation
    - [X] Piece Detection
      - [X] Chain Removal
